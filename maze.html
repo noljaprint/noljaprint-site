@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H37MBB00BG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-H37MBB00BG');
+  </script>
+
+  <title>미로찾기 게임 무료 프린트 | 놀자프린트</title>
+  <meta name="description" content="아이들이 온라인에서 바로 플레이하고 프린트도 할 수 있는 무료 미로찾기 게임입니다. 쉬운 미로부터 어려운 미로까지 단계별로 즐겨보세요.">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.7;
+      color: #333;
+      background: #fffaf0;
+    }
+
+    a {
+      color: #ff7a1a;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    h1, h2 {
+      color: #ff7a1a;
+    }
+
+    .game-box {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    canvas {
+      max-width: 100%;
+      border: 3px solid #333;
+      background: #fff;
+      touch-action: none;
+    }
+
+    .controls {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button, select {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button {
+      background: #ff7a1a;
+      color: white;
+    }
+
+    select {
+      background: white;
+      border: 2px solid #ff7a1a;
+      color: #333;
+    }
+
+    .mobile-pad {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 70px 70px 70px;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .mobile-pad button {
+      height: 60px;
+      font-size: 24px;
+      background: #4CAF50;
+    }
+
+    .empty {
+      background: transparent !important;
+      cursor: default;
+    }
+
+    .message {
+      font-size: 20px;
+      font-weight: bold;
+      color: #4CAF50;
+      margin-top: 15px;
+      min-height: 30px;
+    }
+
+    .info-box {
+      background: #fff3d6;
+      border-radius: 14px;
+      padding: 18px;
+      margin-top: 35px;
+    }
+
+    @media print {
+      body {
+        background: white;
+        margin: 0;
+      }
+
+      a,
+      .controls,
+      .mobile-pad,
+      .message,
+      .info-box,
+      .print-hide {
+        display: none !important;
+      }
+
+      .game-box {
+        box-shadow: none;
+        padding: 0;
+      }
+
+      canvas {
+        width: 100%;
+        max-width: 700px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a href="index.html">← 홈으로</a>
+
+  <h1>미로찾기 게임</h1>
+
+  <p>
+    온라인에서 바로 플레이할 수 있는 <strong>미로찾기 게임</strong>입니다.
+    레벨을 선택해서 미로를 풀어보고, 필요하면 도안을 프린트해서 종이로도 즐겨보세요.
+  </p>
+
+  <div class="game-box">
+
+    <div class="controls print-hide">
+      <select id="levelSelect" onchange="changeLevel()">
+        <option value="0">Level 1 쉬움</option>
+        <option value="1">Level 2 쉬움+</option>
+        <option value="2">Level 3 보통</option>
+        <option value="3">Level 4 어려움</option>
+        <option value="4">Level 5 매우 어려움</option>
+      </select>
+
+      <button onclick="resetMaze()">다시 시작</button>
+      <button onclick="nextLevel()">다음 레벨</button>
+      <button onclick="window.print()">미로 프린트</button>
+    </div>
+
+    <canvas id="mazeCanvas" width="600" height="600"></canvas>
+
+    <div class="message" id="message"></div>
+
+    <div class="mobile-pad print-hide">
+      <div class="empty"></div>
+      <button onclick="movePlayer(0, -1)">▲</button>
+      <div class="empty"></div>
+
+      <button onclick="movePlayer(-1, 0)">◀</button>
+      <button onclick="resetMaze()">↺</button>
+      <button onclick="movePlayer(1, 0)">▶</button>
+
+      <div class="empty"></div>
+      <button onclick="movePlayer(0, 1)">▼</button>
+      <div class="empty"></div>
+    </div>
+
+  </div>
+
+  <div class="info-box">
+    <h2>미로찾기 활용 방법</h2>
+    <ul>
+      <li>방향키 또는 화면 버튼으로 캐릭터를 움직여보세요.</li>
+      <li>초록색 시작점에서 출발해서 빨간색 도착점까지 이동하면 성공입니다.</li>
+      <li>프린트 버튼을 누르면 종이 미로찾기 도안으로 활용할 수 있습니다.</li>
+      <li>쉬운 단계부터 어려운 단계까지 순서대로 도전해보세요.</li>
+    </ul>
+  </div>
+
+  <h2>추천 연령</h2>
+  <p>5세, 6세, 7세, 초등 1학년 아이들에게 추천합니다.</p>
+
+  <h2>관련 프린트 자료</h2>
+  <ul>
+    <li><a href="coloring-dinosaur.html">공룡 색칠공부</a></li>
+    <li><a href="coloring-animal.html">동물 색칠공부</a></li>
+  </ul>
+
+  <script>
+    const mazes = [
+      [
+        "111111111111111",
+        "100000100000001",
+        "101110101111101",
+        "101000100000101",
+        "101011111110101",
+        "101000000010101",
+        "101111101010101",
+        "100000101010001",
+        "111110101011111",
+        "100010001000001",
+        "101011111111101",
+        "101000000000101",
+        "101111111110101",
+        "100000000000001",
+        "111111111111111"
+      ],
+      [
+        "111111111111111",
+        "100000001000001",
+        "111111101011101",
+        "100000101010001",
+        "101110101011111",
+        "101000100000001",
+        "101011111111101",
+        "101010000000101",
+        "101010111110101",
+        "100010100010101",
+        "111110101010101",
+        "100000101010001",
+        "101111101011111",
+        "100000001000001",
+        "111111111111111"
+      ],
+      [
+        "111111111111111",
+        "100010000000001",
+        "101010111111101",
+        "101010100000101",
+        "101010101110101",
+        "101000101010101",
+        "101111101010101",
+        "100000001010101",
+        "111111111010101",
+        "100000000010101",
+        "101111111110101",
+        "101000000000101",
+        "101011111111101",
+        "100000000000001",
+        "111111111111111"
+      ],
+      [
+        "111111111111111",
+        "100000100000001",
+        "101110101111101",
+        "101010101000101",
+        "101010101010101",
+        "101000001010101",
+        "101111111010101",
+        "100000000010101",
+        "111111111110101",
+        "100000000000101",
+        "101111111111101",
+        "101000000000001",
+        "101011111111111",
+        "100000000000001",
+        "111111111111111"
+      ],
+      [
+        "111111111111111",
+        "100000001000001",
+        "111111101011101",
+        "100000101010101",
+        "101110101010101",
+        "101010001010001",
+        "101011111011111",
+        "101000000000001",
+        "101111111111101",
+        "100000000010101",
+        "111111111010101",
+        "100000001010101",
+        "101111101010101",
+        "100000000010001",
+        "111111111111111"
+      ]
+    ];
+
+    const canvas = document.getElementById("mazeCanvas");
+    const ctx = canvas.getContext("2d");
+    const message = document.getElementById("message");
+    const levelSelect = document.getElementById("levelSelect");
+
+    let currentLevel = 0;
+    let player = { x: 1, y: 1 };
+    let goal = { x: 13, y: 13 };
+    let cellSize = 40;
+
+    function drawMaze() {
+      const maze = mazes[currentLevel];
+      cellSize = canvas.width / maze.length;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let y = 0; y < maze.length; y++) {
+        for (let x = 0; x < maze[y].length; x++) {
+          if (maze[y][x] === "1") {
+            ctx.fillStyle = "#333";
+          } else {
+            ctx.fillStyle = "#fff";
+          }
+          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+
+          ctx.strokeStyle = "#eee";
+          ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
+      }
+
+      ctx.fillStyle = "#4CAF50";
+      ctx.fillRect(1 * cellSize, 1 * cellSize, cellSize, cellSize);
+
+      ctx.fillStyle = "#F44336";
+      ctx.fillRect(goal.x * cellSize, goal.y * cellSize, cellSize, cellSize);
+
+      ctx.fillStyle = "#2196F3";
+      ctx.beginPath();
+      ctx.arc(
+        player.x * cellSize + cellSize / 2,
+        player.y * cellSize + cellSize / 2,
+        cellSize / 3,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+
+      ctx.fillStyle = "#333";
+      ctx.font = "bold 18px Arial";
+      ctx.fillText("START", 1 * cellSize + 4, 1 * cellSize + 25);
+      ctx.fillText("GOAL", goal.x * cellSize + 3, goal.y * cellSize + 25);
+    }
+
+    function movePlayer(dx, dy) {
+      const maze = mazes[currentLevel];
+      const newX = player.x + dx;
+      const newY = player.y + dy;
+
+      if (maze[newY] && maze[newY][newX] === "0") {
+        player.x = newX;
+        player.y = newY;
+        message.textContent = "";
+        drawMaze();
+
+        if (player.x === goal.x && player.y === goal.y) {
+          message.textContent = "성공! 다음 레벨에 도전해보세요 🎉";
+        }
+      }
+    }
+
+    function resetMaze() {
+      player = { x: 1, y: 1 };
+      message.textContent = "";
+      drawMaze();
+    }
+
+    function changeLevel() {
+      currentLevel = Number(levelSelect.value);
+      resetMaze();
+    }
+
+    function nextLevel() {
+      if (currentLevel < mazes.length - 1) {
+        currentLevel++;
+        levelSelect.value = currentLevel;
+        resetMaze();
+      } else {
+        message.textContent = "마지막 레벨까지 완료했어요! 정말 잘했어요 🎉";
+      }
+    }
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "ArrowUp") movePlayer(0, -1);
+      if (event.key === "ArrowDown") movePlayer(0, 1);
+      if (event.key === "ArrowLeft") movePlayer(-1, 0);
+      if (event.key === "ArrowRight") movePlayer(1, 0);
+    });
+
+    drawMaze();
+  </script>
+
+</body>
+</html>
