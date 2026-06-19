@@ -279,18 +279,69 @@
       }
     }
 
+    function findFarthestPoint() {
+      const visited = Array.from({ length: size }, () => Array(size).fill(false));
+      const queue = [{ x: start.x, y: start.y, distance: 0 }];
+
+      visited[start.y][start.x] = true;
+
+      let farthest = { x: start.x, y: start.y, distance: 0 };
+
+      const directions = [
+        { dx: 0, dy: -1 },
+        { dx: 1, dy: 0 },
+        { dx: 0, dy: 1 },
+        { dx: -1, dy: 0 }
+      ];
+
+      while (queue.length > 0) {
+        const current = queue.shift();
+
+        if (current.distance > farthest.distance) {
+          farthest = current;
+        }
+
+        for (const direction of directions) {
+          const nx = current.x + direction.dx;
+          const ny = current.y + direction.dy;
+
+          if (
+            nx >= 0 &&
+            ny >= 0 &&
+            nx < size &&
+            ny < size &&
+            !visited[ny][nx] &&
+            maze[ny][nx] === 0
+          ) {
+            visited[ny][nx] = true;
+            queue.push({
+              x: nx,
+              y: ny,
+              distance: current.distance + 1
+            });
+          }
+        }
+      }
+
+      return {
+        x: farthest.x,
+        y: farthest.y
+      };
+    }
+
     function generateMaze() {
       size = Number(levelSelect.value);
       cellSize = canvas.width / size;
 
       start = { x: 1, y: 1 };
-      goal = { x: size - 2, y: size - 2 };
       player = { x: start.x, y: start.y };
 
       maze = createEmptyMaze(size);
       carveMaze(start.x, start.y);
 
       maze[start.y][start.x] = 0;
+
+      goal = findFarthestPoint();
       maze[goal.y][goal.x] = 0;
 
       message.textContent = "";
