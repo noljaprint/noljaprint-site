@@ -14,8 +14,8 @@
     gtag('config', 'G-H37MBB00BG');
   </script>
 
-  <title>미로찾기 게임 무료 프린트 | 놀자프린트</title>
-  <meta name="description" content="아이들이 온라인에서 바로 플레이하고 프린트도 할 수 있는 무료 미로찾기 게임입니다. 쉬운 미로부터 어려운 미로까지 단계별로 즐겨보세요.">
+  <title>랜덤 미로찾기 게임 무료 프린트 | 놀자프린트</title>
+  <meta name="description" content="아이들이 온라인에서 바로 플레이하고 프린트도 할 수 있는 무료 랜덤 미로찾기 게임입니다. 쉬운 미로부터 어려운 미로까지 단계별로 즐겨보세요.">
 
   <style>
     body {
@@ -148,26 +148,27 @@
 
   <a href="index.html">← 홈으로</a>
 
-  <h1>미로찾기 게임</h1>
+  <h1>랜덤 미로찾기 게임</h1>
 
   <p>
-    온라인에서 바로 플레이할 수 있는 <strong>미로찾기 게임</strong>입니다.
-    레벨을 선택해서 미로를 풀어보고, 필요하면 도안을 프린트해서 종이로도 즐겨보세요.
+    온라인에서 바로 플레이할 수 있는 <strong>랜덤 미로찾기 게임</strong>입니다.
+    레벨을 선택하면 매번 새로운 미로가 만들어집니다.
+    필요하면 현재 미로를 프린트해서 종이 도안으로도 즐길 수 있어요.
   </p>
 
   <div class="game-box">
 
     <div class="controls print-hide">
       <select id="levelSelect" onchange="changeLevel()">
-        <option value="0">Level 1 쉬움</option>
-        <option value="1">Level 2 쉬움+</option>
-        <option value="2">Level 3 보통</option>
-        <option value="3">Level 4 어려움</option>
-        <option value="4">Level 5 매우 어려움</option>
+        <option value="11">Level 1 쉬움</option>
+        <option value="15">Level 2 보통</option>
+        <option value="19">Level 3 어려움</option>
+        <option value="23">Level 4 매우 어려움</option>
+        <option value="27">Level 5 도전</option>
       </select>
 
-      <button onclick="resetMaze()">다시 시작</button>
-      <button onclick="nextLevel()">다음 레벨</button>
+      <button onclick="newMaze()">새 미로</button>
+      <button onclick="resetPlayer()">다시 시작</button>
       <button onclick="window.print()">미로 프린트</button>
     </div>
 
@@ -181,7 +182,7 @@
       <div class="empty"></div>
 
       <button onclick="movePlayer(-1, 0)">◀</button>
-      <button onclick="resetMaze()">↺</button>
+      <button onclick="resetPlayer()">↺</button>
       <button onclick="movePlayer(1, 0)">▶</button>
 
       <div class="empty"></div>
@@ -196,8 +197,8 @@
     <ul>
       <li>방향키 또는 화면 버튼으로 캐릭터를 움직여보세요.</li>
       <li>초록색 시작점에서 출발해서 빨간색 도착점까지 이동하면 성공입니다.</li>
-      <li>프린트 버튼을 누르면 종이 미로찾기 도안으로 활용할 수 있습니다.</li>
-      <li>쉬운 단계부터 어려운 단계까지 순서대로 도전해보세요.</li>
+      <li>새 미로 버튼을 누르면 같은 레벨에서도 새로운 미로가 만들어집니다.</li>
+      <li>프린트 버튼을 누르면 현재 미로를 종이 미로찾기 도안으로 활용할 수 있습니다.</li>
     </ul>
   </div>
 
@@ -211,117 +212,103 @@
   </ul>
 
   <script>
-    const mazes = [
-      [
-        "111111111111111",
-        "100000100000001",
-        "101110101111101",
-        "101000100000101",
-        "101011111110101",
-        "101000000010101",
-        "101111101010101",
-        "100000101010001",
-        "111110101011111",
-        "100010001000001",
-        "101011111111101",
-        "101000000000101",
-        "101111111110101",
-        "100000000000001",
-        "111111111111111"
-      ],
-      [
-        "111111111111111",
-        "100000001000001",
-        "111111101011101",
-        "100000101010001",
-        "101110101011111",
-        "101000100000001",
-        "101011111111101",
-        "101010000000101",
-        "101010111110101",
-        "100010100010101",
-        "111110101010101",
-        "100000101010001",
-        "101111101011111",
-        "100000001000001",
-        "111111111111111"
-      ],
-      [
-        "111111111111111",
-        "100010000000001",
-        "101010111111101",
-        "101010100000101",
-        "101010101110101",
-        "101000101010101",
-        "101111101010101",
-        "100000001010101",
-        "111111111010101",
-        "100000000010101",
-        "101111111110101",
-        "101000000000101",
-        "101011111111101",
-        "100000000000001",
-        "111111111111111"
-      ],
-      [
-        "111111111111111",
-        "100000100000001",
-        "101110101111101",
-        "101010101000101",
-        "101010101010101",
-        "101000001010101",
-        "101111111010101",
-        "100000000010101",
-        "111111111110101",
-        "100000000000101",
-        "101111111111101",
-        "101000000000001",
-        "101011111111111",
-        "100000000000001",
-        "111111111111111"
-      ],
-      [
-        "111111111111111",
-        "100000001000001",
-        "111111101011101",
-        "100000101010101",
-        "101110101010101",
-        "101010001010001",
-        "101011111011111",
-        "101000000000001",
-        "101111111111101",
-        "100000000010101",
-        "111111111010101",
-        "100000001010101",
-        "101111101010101",
-        "100000000010001",
-        "111111111111111"
-      ]
-    ];
-
     const canvas = document.getElementById("mazeCanvas");
     const ctx = canvas.getContext("2d");
     const message = document.getElementById("message");
     const levelSelect = document.getElementById("levelSelect");
 
-    let currentLevel = 0;
+    let maze = [];
+    let size = Number(levelSelect.value);
+    let cellSize = canvas.width / size;
+
     let player = { x: 1, y: 1 };
-    let goal = { x: 13, y: 13 };
-    let cellSize = 40;
+    let start = { x: 1, y: 1 };
+    let goal = { x: size - 2, y: size - 2 };
+
+    function createEmptyMaze(size) {
+      const newMaze = [];
+
+      for (let y = 0; y < size; y++) {
+        const row = [];
+
+        for (let x = 0; x < size; x++) {
+          row.push(1);
+        }
+
+        newMaze.push(row);
+      }
+
+      return newMaze;
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+      }
+
+      return array;
+    }
+
+    function carveMaze(x, y) {
+      maze[y][x] = 0;
+
+      const directions = shuffle([
+        { dx: 0, dy: -2 },
+        { dx: 2, dy: 0 },
+        { dx: 0, dy: 2 },
+        { dx: -2, dy: 0 }
+      ]);
+
+      for (const direction of directions) {
+        const nx = x + direction.dx;
+        const ny = y + direction.dy;
+
+        if (
+          nx > 0 &&
+          ny > 0 &&
+          nx < size - 1 &&
+          ny < size - 1 &&
+          maze[ny][nx] === 1
+        ) {
+          maze[y + direction.dy / 2][x + direction.dx / 2] = 0;
+          carveMaze(nx, ny);
+        }
+      }
+    }
+
+    function generateMaze() {
+      size = Number(levelSelect.value);
+      cellSize = canvas.width / size;
+
+      start = { x: 1, y: 1 };
+      goal = { x: size - 2, y: size - 2 };
+      player = { x: start.x, y: start.y };
+
+      maze = createEmptyMaze(size);
+      carveMaze(start.x, start.y);
+
+      maze[start.y][start.x] = 0;
+      maze[goal.y][goal.x] = 0;
+
+      message.textContent = "";
+      drawMaze();
+    }
 
     function drawMaze() {
-      const maze = mazes[currentLevel];
-      cellSize = canvas.width / maze.length;
-
+      cellSize = canvas.width / size;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      for (let y = 0; y < maze.length; y++) {
-        for (let x = 0; x < maze[y].length; x++) {
-          if (maze[y][x] === "1") {
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          if (maze[y][x] === 1) {
             ctx.fillStyle = "#333";
           } else {
             ctx.fillStyle = "#fff";
           }
+
           ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
 
           ctx.strokeStyle = "#eee";
@@ -330,7 +317,7 @@
       }
 
       ctx.fillStyle = "#4CAF50";
-      ctx.fillRect(1 * cellSize, 1 * cellSize, cellSize, cellSize);
+      ctx.fillRect(start.x * cellSize, start.y * cellSize, cellSize, cellSize);
 
       ctx.fillStyle = "#F44336";
       ctx.fillRect(goal.x * cellSize, goal.y * cellSize, cellSize, cellSize);
@@ -347,57 +334,67 @@
       ctx.fill();
 
       ctx.fillStyle = "#333";
-      ctx.font = "bold 18px Arial";
-      ctx.fillText("START", 1 * cellSize + 4, 1 * cellSize + 25);
-      ctx.fillText("GOAL", goal.x * cellSize + 3, goal.y * cellSize + 25);
+      ctx.font = "bold " + Math.max(10, cellSize / 3) + "px Arial";
+      ctx.fillText("S", start.x * cellSize + cellSize * 0.35, start.y * cellSize + cellSize * 0.65);
+      ctx.fillText("G", goal.x * cellSize + cellSize * 0.35, goal.y * cellSize + cellSize * 0.65);
     }
 
     function movePlayer(dx, dy) {
-      const maze = mazes[currentLevel];
       const newX = player.x + dx;
       const newY = player.y + dy;
 
-      if (maze[newY] && maze[newY][newX] === "0") {
+      if (
+        maze[newY] &&
+        maze[newY][newX] === 0
+      ) {
         player.x = newX;
         player.y = newY;
         message.textContent = "";
         drawMaze();
 
         if (player.x === goal.x && player.y === goal.y) {
-          message.textContent = "성공! 다음 레벨에 도전해보세요 🎉";
+          message.textContent = "성공! 새 미로에 도전해보세요 🎉";
         }
       }
     }
 
-    function resetMaze() {
-      player = { x: 1, y: 1 };
+    function resetPlayer() {
+      player = { x: start.x, y: start.y };
       message.textContent = "";
       drawMaze();
     }
 
     function changeLevel() {
-      currentLevel = Number(levelSelect.value);
-      resetMaze();
+      generateMaze();
     }
 
-    function nextLevel() {
-      if (currentLevel < mazes.length - 1) {
-        currentLevel++;
-        levelSelect.value = currentLevel;
-        resetMaze();
-      } else {
-        message.textContent = "마지막 레벨까지 완료했어요! 정말 잘했어요 🎉";
-      }
+    function newMaze() {
+      generateMaze();
     }
 
     document.addEventListener("keydown", function(event) {
-      if (event.key === "ArrowUp") movePlayer(0, -1);
-      if (event.key === "ArrowDown") movePlayer(0, 1);
-      if (event.key === "ArrowLeft") movePlayer(-1, 0);
-      if (event.key === "ArrowRight") movePlayer(1, 0);
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        movePlayer(0, -1);
+      }
+
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        movePlayer(0, 1);
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        movePlayer(-1, 0);
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        movePlayer(1, 0);
+      }
     });
 
-    drawMaze();
+    generateMaze();
   </script>
 
 </body>
