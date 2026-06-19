@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>티라노 클릭 색칠하기 | 놀자프린트</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.7;
+      color: #333;
+      background: #fffaf3;
+    }
+
+    h1 {
+      color: #ff7a1a;
+    }
+
+    .palette {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .color-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 3px solid #eee;
+      cursor: pointer;
+    }
+
+    .color-btn.active {
+      border: 4px solid #333;
+    }
+
+    .svg-box {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .part {
+      fill: white;
+      stroke: #222;
+      stroke-width: 5;
+      cursor: pointer;
+    }
+
+    .button {
+      background: #ff7a1a;
+      color: white;
+      border: none;
+      padding: 14px 22px;
+      border-radius: 8px;
+      font-size: 17px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .gray {
+      background: #666;
+    }
+
+    @media print {
+      .no-print {
+        display: none;
+      }
+
+      body {
+        background: white;
+      }
+
+      .svg-box {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="no-print" href="coloring-trex.html">← 티라노 색칠공부로 돌아가기</a>
+
+  <h1>🦖 티라노사우루스 클릭 색칠하기</h1>
+
+  <p>
+    색을 고른 뒤 티라노사우루스의 몸, 배, 머리, 다리, 꼬리를 클릭해보세요.
+    클릭한 부분에 색이 채워집니다.
+  </p>
+
+  <div class="palette no-print">
+    <button class="color-btn active" style="background:#4CAF50;" onclick="setColor('#4CAF50', this)"></button>
+    <button class="color-btn" style="background:#8BC34A;" onclick="setColor('#8BC34A', this)"></button>
+    <button class="color-btn" style="background:#795548;" onclick="setColor('#795548', this)"></button>
+    <button class="color-btn" style="background:#FFC107;" onclick="setColor('#FFC107', this)"></button>
+    <button class="color-btn" style="background:#FF5722;" onclick="setColor('#FF5722', this)"></button>
+    <button class="color-btn" style="background:#2196F3;" onclick="setColor('#2196F3', this)"></button>
+    <button class="color-btn" style="background:#E91E63;" onclick="setColor('#E91E63', this)"></button>
+    <button class="color-btn" style="background:#000000;" onclick="setColor('#000000', this)"></button>
+  </div>
+
+  <div class="svg-box">
+    <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- 배경 -->
+      <circle class="part" cx="720" cy="100" r="50" onclick="paint(this)" />
+      <path class="part" d="M0 480 C160 430, 280 510, 420 460 C560 410, 700 500, 900 450 L900 600 L0 600 Z" onclick="paint(this)" />
+
+      <!-- 꼬리 -->
+      <path class="part" d="M205 320 C95 285, 40 240, 25 200 C110 225, 190 245, 285 285 Z" onclick="paint(this)" />
+
+      <!-- 몸통 -->
+      <ellipse class="part" cx="430" cy="310" rx="190" ry="115" onclick="paint(this)" />
+
+      <!-- 배 -->
+      <ellipse class="part" cx="455" cy="345" rx="120" ry="65" onclick="paint(this)" />
+
+      <!-- 목 -->
+      <path class="part" d="M560 250 C610 195, 650 170, 700 180 C675 225, 640 260, 590 295 Z" onclick="paint(this)" />
+
+      <!-- 머리 -->
+      <path class="part" d="M670 155 C775 130, 845 175, 830 240 C805 300, 710 275, 645 235 C620 205, 625 170, 670 155 Z" onclick="paint(this)" />
+
+      <!-- 입 -->
+      <path d="M695 225 C740 245, 785 242, 820 220" fill="none" stroke="#222" stroke-width="5" />
+
+      <!-- 눈 -->
+      <circle cx="735" cy="185" r="10" fill="#222" />
+
+      <!-- 이빨 -->
+      <path d="M720 230 L730 252 L740 230" fill="white" stroke="#222" stroke-width="3" />
+      <path d="M760 235 L770 257 L780 235" fill="white" stroke="#222" stroke-width="3" />
+
+      <!-- 팔 -->
+      <path class="part" d="M535 330 C585 335, 610 370, 590 390 C555 370, 530 360, 505 355 Z" onclick="paint(this)" />
+      <path class="part" d="M500 345 C540 370, 550 405, 520 415 C500 390, 485 370, 465 360 Z" onclick="paint(this)" />
+
+      <!-- 다리 -->
+      <path class="part" d="M360 395 C335 465, 320 520, 280 530 C255 520, 280 490, 300 455 C315 425, 315 400, 330 375 Z" onclick="paint(this)" />
+      <path class="part" d="M500 395 C535 455, 560 510, 610 525 C635 510, 605 485, 585 455 C565 425, 560 395, 540 375 Z" onclick="paint(this)" />
+
+      <!-- 발 -->
+      <path class="part" d="M245 530 C285 545, 325 545, 350 530 C315 515, 280 510, 245 530 Z" onclick="paint(this)" />
+      <path class="part" d="M580 525 C625 545, 675 540, 705 520 C665 505, 620 505, 580 525 Z" onclick="paint(this)" />
+
+    </svg>
+  </div>
+
+  <div class="no-print" style="text-align:center; margin-top:25px;">
+    <button class="button gray" onclick="resetColors()">초기화</button>
+    <button class="button" onclick="window.print()">🖨️ 색칠한 그림 프린트</button>
+  </div>
+
+  <script>
+    let selectedColor = '#4CAF50';
+
+    function setColor(color, button) {
+      selectedColor = color;
+
+      document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      button.classList.add('active');
+    }
+
+    function paint(element) {
+      element.style.fill = selectedColor;
+    }
+
+    function resetColors() {
+      document.querySelectorAll('.part').forEach(part => {
+        part.style.fill = 'white';
+      });
+    }
+  </script>
+
+</body>
+</html>
