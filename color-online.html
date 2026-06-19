@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>온라인 색칠하기 | 놀자프린트</title>
-  <meta name="description" content="놀자프린트 온라인 색칠하기 페이지입니다. 색칠공부 도안을 화면에서 직접 색칠하고 프린트할 수 있습니다.">
+  <meta name="description" content="놀자프린트 온라인 색칠하기 페이지입니다. 색칠공부 도안을 화면에서 직접 색칠하고 저장하거나 프린트할 수 있습니다.">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-H37MBB00BG"></script>
@@ -118,6 +118,14 @@
       background: #4CAF50;
     }
 
+    .blue-btn {
+      background: #2196F3;
+    }
+
+    .eraser-btn {
+      background: #9E9E9E;
+    }
+
     @media print {
       .no-print {
         display: none;
@@ -162,7 +170,7 @@
 
   <div class="tool-box no-print">
     <label for="brushSize">붓 굵기</label>
-    <input id="brushSize" type="range" min="4" max="40" value="14" oninput="changeBrushSize(this.value)">
+    <input id="brushSize" type="range" min="4" max="50" value="14" oninput="changeBrushSize(this.value)">
     <span id="brushSizeText">14</span>
   </div>
 
@@ -172,9 +180,11 @@
   </div>
 
   <div class="action-area no-print">
-    <button class="action-btn gray-btn" onclick="clearCanvas()">초기화</button>
-    <button class="action-btn green-btn" onclick="downloadColoredImage()">색칠한 그림 저장</button>
-    <button class="action-btn" onclick="window.print()">🖨️ 프린트하기</button>
+    <button class="action-btn blue-btn" onclick="undo()">↩️ 되돌리기</button>
+    <button class="action-btn eraser-btn" onclick="setEraser()">🧽 지우개</button>
+    <button class="action-btn gray-btn" onclick="clearCanvas()">🗑️ 초기화</button>
+    <button class="action-btn green-btn" onclick="downloadColoredImage()">💾 PNG 저장</button>
+    <button class="action-btn" onclick="window.print()">🖨️ 프린트</button>
   </div>
 
   <script>
@@ -189,6 +199,7 @@
     let drawing = false;
     let currentColor = '#4CAF50';
     let brushSize = 14;
+    let historyStack = [];
 
     document.getElementById('pageTitle').innerText = title + ' 온라인 색칠하기';
 
@@ -200,12 +211,24 @@
 
     function resizeCanvas() {
       const rect = baseImage.getBoundingClientRect();
+
+      const oldImage = new Image();
+      oldImage.src = canvas.toDataURL();
+
       canvas.width = rect.width;
       canvas.height = rect.height;
       canvas.style.height = rect.height + 'px';
+
+      oldImage.onload = function () {
+        ctx.drawImage(oldImage, 0, 0, canvas.width, canvas.height);
+      };
     }
 
-    baseImage.onload = resizeCanvas;
+    baseImage.onload = function () {
+      resizeCanvas();
+      saveHistory();
+    };
+
     window.addEventListener('resize', resizeCanvas);
 
     function setColor(color, button) {
@@ -218,8 +241,15 @@
       button.classList.add('active');
     }
 
+    function setEraser() {
+      currentColor = 'eraser';
+      document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+    }
+
     function changeBrushSize(size) {
-      brushSize = size;
+      brushSize = Number(size);
       document.getElementById('brushSizeText').innerText = size;
     }
 
@@ -239,7 +269,17 @@
       };
     }
 
+    function saveHistory() {
+      if (historyStack.length > 20) {
+        historyStack.shift();
+      }
+
+      historyStack.push(canvas.toDataURL());
+    }
+
     function startDrawing(event) {
+      saveHistory();
+
       drawing = true;
       const pos = getPosition(event);
       ctx.beginPath();
@@ -255,7 +295,13 @@
       ctx.lineWidth = brushSize;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      ctx.strokeStyle = currentColor;
+
+      if (currentColor === 'eraser') {
+        ctx.globalCompositeOperation = 'destination-out';
+      } else {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = currentColor;
+      }
 
       ctx.lineTo(pos.x, pos.y);
       ctx.stroke();
@@ -265,9 +311,25 @@
 
     function stopDrawing() {
       drawing = false;
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    function undo() {
+      if (historyStack.length === 0) return;
+
+      const previous = historyStack.pop();
+      const img = new Image();
+
+      img.onload = function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+
+      img.src = previous;
     }
 
     function clearCanvas() {
+      saveHistory();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
@@ -281,8 +343,10 @@
       tempCtx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
       tempCtx.drawImage(canvas, 0, 0);
 
+      const fileName = title.replaceAll(' ', '-') + '-colored.png';
+
       const link = document.createElement('a');
-      link.download = 'noljaprint-colored.png';
+      link.download = fileName;
       link.href = tempCanvas.toDataURL('image/png');
       link.click();
     }
