@@ -5,185 +5,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>티라노사우루스 색칠공부 도안 무료 프린트 | 놀자프린트</title>
-  <meta name="description" content="티라노사우루스 색칠공부 도안을 무료로 출력하고, 화면에서 바로 색칠해보세요. 색칠 참고 이미지와 추천 색상이 있는 공룡 색칠놀이 자료입니다.">
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 850px;
-      margin: 40px auto;
-      padding: 20px;
-      line-height: 1.7;
-      color: #333;
-    }
-
-    .image-box {
-      text-align: center;
-      margin: 25px 0 40px;
-    }
-
-    .reference-img,
-    .coloring-img {
-      max-width: 100%;
-      border-radius: 16px;
-    }
-
-    .reference-img {
-      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-    }
-
-    .coloring-img {
-      border: 1px solid #ddd;
-    }
-
-    .palette {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin: 20px 0 25px;
-    }
-
-    .color-btn {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      border: 3px solid #eee;
-      cursor: pointer;
-    }
-
-    .color-btn.active {
-      border: 3px solid #333;
-    }
-
-    .action-btn {
-      background: #ff7a1a;
-      color: white;
-      border: none;
-      padding: 14px 22px;
-      border-radius: 8px;
-      font-size: 17px;
-      cursor: pointer;
-      margin: 5px;
-    }
-
-    .gray-btn {
-      background: #666;
-    }
-
-    .canvas-wrap {
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-      margin: 20px auto;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      overflow: hidden;
-      background: white;
-    }
-
-    #coloringBase {
-      display: block;
-      width: 100%;
-    }
-
-    #drawCanvas {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      touch-action: none;
-      cursor: crosshair;
-    }
-
-    @media print {
-      .no-print {
-        display: none;
-      }
-
-      body {
-        margin: 0;
-        max-width: none;
-      }
-
-      .reference-section,
-      .online-section {
-        display: none;
-      }
-
-      .print-section {
-        display: block;
-      }
-    }
-  </style>
+  <meta name="description" content="티라노사우루스 색칠공부 도안을 무료로 출력해보세요. 색칠 참고 이미지, 추천 색상, 온라인 색칠하기 베타 기능이 있는 공룡 색칠놀이 자료입니다.">
 </head>
 
-<body>
+<body style="font-family: Arial, sans-serif; max-width: 850px; margin: 40px auto; padding: 20px; line-height: 1.7; color:#333;">
 
-  <a class="no-print" href="coloring-dinosaur.html">← 공룡 색칠공부 목록으로</a>
+  <a href="coloring-dinosaur.html">← 공룡 색칠공부 목록으로</a>
 
   <h1>티라노사우루스 색칠공부 도안</h1>
 
   <p>
     아이들이 좋아하는 공룡 중 하나인 <strong>티라노사우루스</strong> 색칠공부 도안입니다.
-    색칠 참고 이미지를 보고 원하는 색으로 자유롭게 색칠해보세요.
+    아래 색칠 참고 이미지를 보고 원하는 색으로 자유롭게 색칠해보세요.
   </p>
 
-  <section class="reference-section">
-    <h2>🎨 색칠 참고 이미지</h2>
-    <p>
-      아래 이미지는 색칠할 때 참고할 수 있는 예시 이미지입니다.
-      꼭 똑같이 칠하지 않아도 괜찮아요.
-    </p>
+  <h2>🎨 색칠 참고 이미지</h2>
+  <p>
+    아래 이미지는 색칠할 때 참고할 수 있는 예시 이미지입니다.
+    꼭 똑같이 칠하지 않아도 괜찮아요.
+  </p>
 
-    <div class="image-box">
-      <img
-        class="reference-img"
-        src="trex-original.png"
-        alt="티라노사우루스 색칠 참고 이미지"
-      >
-    </div>
-  </section>
+  <div style="text-align:center; margin:25px 0 40px;">
+    <img
+      src="trex-original.png"
+      alt="티라노사우루스 색칠 참고 이미지"
+      style="max-width:100%; border-radius:16px; box-shadow:0 4px 14px rgba(0,0,0,0.12);"
+    >
+  </div>
 
-  <section class="online-section">
-    <h2>🖍️ 온라인 색칠하기 베타</h2>
-    <p>
-      색을 고른 뒤 도안 위에서 마우스나 손가락으로 색칠해보세요.
-      아직은 붓으로 직접 칠하는 방식입니다.
-    </p>
+  <h2>🖍️ 색칠공부 도안</h2>
 
-    <div class="palette no-print">
-      <button class="color-btn active" style="background:#4CAF50;" onclick="setColor('#4CAF50', this)"></button>
-      <button class="color-btn" style="background:#8BC34A;" onclick="setColor('#8BC34A', this)"></button>
-      <button class="color-btn" style="background:#795548;" onclick="setColor('#795548', this)"></button>
-      <button class="color-btn" style="background:#FFC107;" onclick="setColor('#FFC107', this)"></button>
-      <button class="color-btn" style="background:#FF5722;" onclick="setColor('#FF5722', this)"></button>
-      <button class="color-btn" style="background:#2196F3;" onclick="setColor('#2196F3', this)"></button>
-      <button class="color-btn" style="background:#E91E63;" onclick="setColor('#E91E63', this)"></button>
-      <button class="color-btn" style="background:#000000;" onclick="setColor('#000000', this)"></button>
-    </div>
+  <div style="text-align:center; margin:25px 0;">
+    <img
+      src="trex-coloring.png"
+      alt="티라노사우루스 색칠공부 도안"
+      style="max-width:100%; border:1px solid #ddd; border-radius:12px;"
+    >
+  </div>
 
-    <div class="canvas-wrap" id="canvasWrap">
-      <img id="coloringBase" src="trex-coloring.png" alt="티라노사우루스 온라인 색칠 도안">
-      <canvas id="drawCanvas"></canvas>
-    </div>
+  <h2>🎨 추천 색상</h2>
 
-    <div class="no-print" style="text-align:center; margin:25px 0;">
-      <button class="action-btn gray-btn" onclick="clearCanvas()">초기화</button>
-      <button class="action-btn" onclick="window.print()">🖨️ 프린트하기</button>
-    </div>
-  </section>
+  <p>
+    티라노사우루스는 실제 색상이 정확히 알려져 있지 않아요.
+    초록색, 갈색, 노란색, 주황색 등 다양한 색으로 상상하며 색칠해보세요.
+  </p>
 
-  <section class="print-section">
-    <h2>🖨️ 프린트용 도안</h2>
+  <div style="display:flex; gap:12px; flex-wrap:wrap; margin:20px 0 35px;">
+    <div style="width:52px; height:52px; background:#4CAF50; border-radius:50%; border:2px solid #eee;"></div>
+    <div style="width:52px; height:52px; background:#8BC34A; border-radius:50%; border:2px solid #eee;"></div>
+    <div style="width:52px; height:52px; background:#795548; border-radius:50%; border:2px solid #eee;"></div>
+    <div style="width:52px; height:52px; background:#FFC107; border-radius:50%; border:2px solid #eee;"></div>
+    <div style="width:52px; height:52px; background:#FF5722; border-radius:50%; border:2px solid #eee;"></div>
+  </div>
 
-    <div class="image-box">
-      <img
-        class="coloring-img"
-        src="trex-coloring.png"
-        alt="티라노사우루스 색칠공부 도안"
-      >
-    </div>
-  </section>
+  <div style="text-align:center; margin-bottom:40px;">
+    <a
+      href="coloring-trex-click.html"
+      style="
+        display:inline-block;
+        background:#4CAF50;
+        color:white;
+        padding:15px 25px;
+        border-radius:8px;
+        text-decoration:none;
+        font-size:18px;
+        margin:10px;
+      ">
+      🎨 온라인 색칠하기 베타
+    </a>
+
+    <button
+      onclick="window.print()"
+      style="
+        background:#ff7a1a;
+        color:white;
+        border:none;
+        padding:15px 25px;
+        border-radius:8px;
+        font-size:18px;
+        cursor:pointer;
+        margin:10px;
+      ">
+      🖨️ 도안 프린트하기
+    </button>
+  </div>
 
   <h2>추천 연령</h2>
   <p>5세, 6세, 7세, 초등 1학년 아이들에게 추천합니다.</p>
@@ -194,93 +99,6 @@
     <li>참고 이미지를 보며 원하는 색으로 자유롭게 색칠하기</li>
     <li>색칠 후 공룡 이야기를 만들어보기</li>
   </ul>
-
-  <script>
-    const canvas = document.getElementById('drawCanvas');
-    const baseImg = document.getElementById('coloringBase');
-    const ctx = canvas.getContext('2d');
-
-    let drawing = false;
-    let currentColor = '#4CAF50';
-    let brushSize = 14;
-
-    function resizeCanvas() {
-      const rect = baseImg.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-      canvas.style.height = rect.height + 'px';
-    }
-
-    baseImg.onload = resizeCanvas;
-    window.addEventListener('resize', resizeCanvas);
-
-    function setColor(color, button) {
-      currentColor = color;
-
-      document.querySelectorAll('.color-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-
-      button.classList.add('active');
-    }
-
-    function getPosition(event) {
-      const rect = canvas.getBoundingClientRect();
-
-      if (event.touches && event.touches.length > 0) {
-        return {
-          x: event.touches[0].clientX - rect.left,
-          y: event.touches[0].clientY - rect.top
-        };
-      }
-
-      return {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top
-      };
-    }
-
-    function startDrawing(event) {
-      drawing = true;
-      const pos = getPosition(event);
-      ctx.beginPath();
-      ctx.moveTo(pos.x, pos.y);
-      event.preventDefault();
-    }
-
-    function draw(event) {
-      if (!drawing) return;
-
-      const pos = getPosition(event);
-
-      ctx.lineWidth = brushSize;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.strokeStyle = currentColor;
-
-      ctx.lineTo(pos.x, pos.y);
-      ctx.stroke();
-
-      event.preventDefault();
-    }
-
-    function stopDrawing() {
-      drawing = false;
-    }
-
-    function clearCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseleave', stopDrawing);
-
-    canvas.addEventListener('touchstart', startDrawing);
-    canvas.addEventListener('touchmove', draw);
-    canvas.addEventListener('touchend', stopDrawing);
-  </script>
 
 </body>
 </html>
