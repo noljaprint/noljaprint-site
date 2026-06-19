@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>온라인 색칠하기 | 놀자프린트</title>
+  <meta name="description" content="놀자프린트 온라인 색칠하기 페이지입니다. 색칠공부 도안을 화면에서 직접 색칠하고 프린트할 수 있습니다.">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H37MBB00BG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-H37MBB00BG');
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.7;
+      color: #333;
+      background: #fffaf3;
+    }
+
+    h1 {
+      color: #ff7a1a;
+      text-align: center;
+    }
+
+    .top-link {
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .palette {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .color-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 3px solid #eee;
+      cursor: pointer;
+    }
+
+    .color-btn.active {
+      border: 4px solid #333;
+    }
+
+    .tool-box {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .tool-box label {
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 850px;
+      margin: 25px auto;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+
+    #baseImage {
+      display: block;
+      width: 100%;
+    }
+
+    #drawCanvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    .action-area {
+      text-align: center;
+      margin: 25px 0;
+    }
+
+    .action-btn {
+      background: #ff7a1a;
+      color: white;
+      border: none;
+      padding: 14px 22px;
+      border-radius: 8px;
+      font-size: 17px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .gray-btn {
+      background: #666;
+    }
+
+    .green-btn {
+      background: #4CAF50;
+    }
+
+    @media print {
+      .no-print {
+        display: none;
+      }
+
+      body {
+        background: white;
+        margin: 0;
+        max-width: none;
+      }
+
+      .canvas-wrap {
+        box-shadow: none;
+        border: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a class="top-link no-print" href="javascript:history.back()">← 이전 페이지로</a>
+
+  <h1 id="pageTitle">온라인 색칠하기</h1>
+
+  <p class="no-print" style="text-align:center;">
+    색을 고른 뒤 도안 위에서 마우스나 손가락으로 색칠해보세요.
+  </p>
+
+  <div class="palette no-print">
+    <button class="color-btn active" style="background:#4CAF50;" onclick="setColor('#4CAF50', this)"></button>
+    <button class="color-btn" style="background:#8BC34A;" onclick="setColor('#8BC34A', this)"></button>
+    <button class="color-btn" style="background:#795548;" onclick="setColor('#795548', this)"></button>
+    <button class="color-btn" style="background:#FFC107;" onclick="setColor('#FFC107', this)"></button>
+    <button class="color-btn" style="background:#FF5722;" onclick="setColor('#FF5722', this)"></button>
+    <button class="color-btn" style="background:#2196F3;" onclick="setColor('#2196F3', this)"></button>
+    <button class="color-btn" style="background:#E91E63;" onclick="setColor('#E91E63', this)"></button>
+    <button class="color-btn" style="background:#9C27B0;" onclick="setColor('#9C27B0', this)"></button>
+    <button class="color-btn" style="background:#000000;" onclick="setColor('#000000', this)"></button>
+    <button class="color-btn" style="background:#FFFFFF;" onclick="setColor('#FFFFFF', this)"></button>
+  </div>
+
+  <div class="tool-box no-print">
+    <label for="brushSize">붓 굵기</label>
+    <input id="brushSize" type="range" min="4" max="40" value="14" oninput="changeBrushSize(this.value)">
+    <span id="brushSizeText">14</span>
+  </div>
+
+  <div class="canvas-wrap" id="canvasWrap">
+    <img id="baseImage" src="" alt="온라인 색칠 도안">
+    <canvas id="drawCanvas"></canvas>
+  </div>
+
+  <div class="action-area no-print">
+    <button class="action-btn gray-btn" onclick="clearCanvas()">초기화</button>
+    <button class="action-btn green-btn" onclick="downloadColoredImage()">색칠한 그림 저장</button>
+    <button class="action-btn" onclick="window.print()">🖨️ 프린트하기</button>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const imageFile = params.get('img');
+    const title = params.get('title') || '온라인 색칠하기';
+
+    const canvas = document.getElementById('drawCanvas');
+    const baseImage = document.getElementById('baseImage');
+    const ctx = canvas.getContext('2d');
+
+    let drawing = false;
+    let currentColor = '#4CAF50';
+    let brushSize = 14;
+
+    document.getElementById('pageTitle').innerText = title + ' 온라인 색칠하기';
+
+    if (imageFile) {
+      baseImage.src = imageFile;
+    } else {
+      document.getElementById('pageTitle').innerText = '도안 이미지를 찾을 수 없습니다';
+    }
+
+    function resizeCanvas() {
+      const rect = baseImage.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      canvas.style.height = rect.height + 'px';
+    }
+
+    baseImage.onload = resizeCanvas;
+    window.addEventListener('resize', resizeCanvas);
+
+    function setColor(color, button) {
+      currentColor = color;
+
+      document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      button.classList.add('active');
+    }
+
+    function changeBrushSize(size) {
+      brushSize = size;
+      document.getElementById('brushSizeText').innerText = size;
+    }
+
+    function getPosition(event) {
+      const rect = canvas.getBoundingClientRect();
+
+      if (event.touches && event.touches.length > 0) {
+        return {
+          x: event.touches[0].clientX - rect.left,
+          y: event.touches[0].clientY - rect.top
+        };
+      }
+
+      return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+      };
+    }
+
+    function startDrawing(event) {
+      drawing = true;
+      const pos = getPosition(event);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+      event.preventDefault();
+    }
+
+    function draw(event) {
+      if (!drawing) return;
+
+      const pos = getPosition(event);
+
+      ctx.lineWidth = brushSize;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = currentColor;
+
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+
+      event.preventDefault();
+    }
+
+    function stopDrawing() {
+      drawing = false;
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function downloadColoredImage() {
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+
+      tempCtx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+      tempCtx.drawImage(canvas, 0, 0);
+
+      const link = document.createElement('a');
+      link.download = 'noljaprint-colored.png';
+      link.href = tempCanvas.toDataURL('image/png');
+      link.click();
+    }
+
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+
+    canvas.addEventListener('touchstart', startDrawing);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDrawing);
+  </script>
+
+</body>
+</html>
