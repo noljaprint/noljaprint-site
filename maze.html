@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-H37MBB00BG"></script>
@@ -51,7 +51,7 @@
       max-width: 100%;
       border: 3px solid #333;
       background: #fff;
-      touch-action: none;
+      touch-action: manipulation;
     }
 
     .controls {
@@ -94,6 +94,7 @@
       height: 60px;
       font-size: 24px;
       background: #4CAF50;
+      touch-action: manipulation;
     }
 
     .empty {
@@ -144,7 +145,7 @@
   </style>
 </head>
 
-<body>
+<body style="-webkit-touch-callout:none; -webkit-user-select:none; user-select:none;">
 
   <a href="index.html">← 홈으로</a>
 
