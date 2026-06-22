@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>덧셈 뺄셈 숫자 공부 | 놀자프린트</title>
+  <meta name="description" content="아이들이 온라인에서 덧셈과 뺄셈을 연습할 수 있는 무료 숫자 공부 페이지입니다. 10문제씩 랜덤으로 풀고 프린트도 할 수 있습니다.">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H37MBB00BG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-H37MBB00BG');
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px 20px 140px;
+      line-height: 1.7;
+      color: #333;
+      background: #fffaf0;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    a {
+      color: #ff7a1a;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    h1, h2 {
+      color: #ff7a1a;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .top-box {
+      background: #fff;
+      padding: 22px;
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      margin: 25px 0;
+      text-align: center;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    button, select {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button {
+      background: #ff7a1a;
+      color: white;
+      touch-action: manipulation;
+    }
+
+    select {
+      background: white;
+      border: 2px solid #ff7a1a;
+      color: #333;
+    }
+
+    .question-list {
+      display: grid;
+      gap: 14px;
+      margin: 25px 0;
+    }
+
+    .question {
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      font-size: 28px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .question-text {
+      flex: 1;
+      text-align: left;
+    }
+
+    .answer-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 70px;
+      height: 48px;
+      border: 3px solid #ffb36b;
+      border-radius: 10px;
+      background: #fff8e1;
+      color: #333;
+      margin: 0 5px;
+      padding: 0 8px;
+      box-sizing: border-box;
+    }
+
+    .answer-box.active {
+      border-color: #2196F3;
+      background: #e3f2fd;
+    }
+
+    .answer-box.correct {
+      border-color: #4CAF50;
+      background: #e8f5e9;
+    }
+
+    .answer-box.wrong {
+      border-color: #F44336;
+      background: #ffebee;
+    }
+
+    .result-mark {
+      width: 70px;
+      text-align: center;
+      font-size: 22px;
+    }
+
+    .score-box {
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: #4CAF50;
+      min-height: 36px;
+      margin: 20px 0;
+    }
+
+    .number-pad {
+      position: fixed;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      width: calc(100% - 20px);
+      max-width: 900px;
+      background: rgba(255,255,255,0.98);
+      border: 2px solid #ffd56b;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.16);
+      padding: 12px;
+      box-sizing: border-box;
+      z-index: 100;
+    }
+
+    .number-row {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .number-row button {
+      background: #4CAF50;
+      height: 52px;
+      font-size: 22px;
+      padding: 0;
+    }
+
+    .pad-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .delete-btn {
+      background: #777;
+    }
+
+    .check-btn {
+      background: #2196F3;
+    }
+
+    .new-btn {
+      background: #ff7a1a;
+    }
+
+    .info-box {
+      background: #fff3d6;
+      border-radius: 14px;
+      padding: 18px;
+      margin-top: 35px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        margin: 20px auto;
+        padding: 14px 14px 150px;
+      }
+
+      .question {
+        font-size: 23px;
+        padding: 14px;
+      }
+
+      .answer-box {
+        min-width: 58px;
+        height: 44px;
+      }
+
+      .result-mark {
+        width: 45px;
+      }
+
+      .number-row {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .no-print,
+      .number-pad,
+      .controls,
+      .score-box {
+        display: none !important;
+      }
+
+      .question {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+      }
+
+      .answer-box {
+        color: transparent;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a class="no-print" href="index.html">← 홈으로</a>
+
+  <h1>덧셈 뺄셈 숫자 공부</h1>
+
+  <p class="no-print" style="text-align:center;">
+    레벨을 선택하고 10문제씩 풀어보세요. 빈칸을 누른 뒤 아래 숫자패드로 답을 입력하면 됩니다.
+  </p>
+
+  <div class="top-box no-print">
+    <label for="levelSelect"><strong>난이도 선택</strong></label>
+
+    <div class="controls">
+      <select id="levelSelect" onchange="generateQuestions()">
+        <option value="1">Level 1: 5 이하 덧셈</option>
+        <option value="2">Level 2: 10 이하 덧셈/뺄셈</option>
+        <option value="3">Level 3: 20 이하 덧셈</option>
+        <option value="4">Level 4: 20 이하 덧셈/뺄셈 빈칸</option>
+        <option value="5">Level 5: 50 이하 두 자릿수 응용</option>
+      </select>
+
+      <button onclick="generateQuestions()">새 문제 10개</button>
+      <button onclick="checkAnswers()">채점하기</button>
+      <button onclick="window.print()">프린트</button>
+    </div>
+  </div>
+
+  <div id="questionList" class="question-list"></div>
+
+  <div id="scoreBox" class="score-box"></div>
+
+  <div class="info-box no-print">
+    <h2>학습 방법</h2>
+    <ul>
+      <li>빈칸을 누르고 아래 숫자패드로 답을 입력하세요.</li>
+      <li>문제는 매번 랜덤으로 새로 만들어집니다.</li>
+      <li>같은 레벨에서 새 문제를 계속 풀 수 있습니다.</li>
+      <li>프린트 버튼을 누르면 종이 문제지로도 사용할 수 있습니다.</li>
+    </ul>
+  </div>
+
+  <h2 class="no-print">관련 놀이</h2>
+  <ul class="no-print">
+    <li><a href="maze.html">무료 미로찾기 게임</a></li>
+    <li><a href="coloring-dinosaur.html">공룡 색칠공부</a></li>
+    <li><a href="coloring-animal.html">동물 색칠공부</a></li>
+  </ul>
+
+  <div class="number-pad no-print">
+    <div class="number-row">
+      <button onclick="pressNumber('1')">1</button>
+      <button onclick="pressNumber('2')">2</button>
+      <button onclick="pressNumber('3')">3</button>
+      <button onclick="pressNumber('4')">4</button>
+      <button onclick="pressNumber('5')">5</button>
+      <button onclick="pressNumber('6')">6</button>
+      <button onclick="pressNumber('7')">7</button>
+      <button onclick="pressNumber('8')">8</button>
+      <button onclick="pressNumber('9')">9</button>
+      <button onclick="pressNumber('0')">0</button>
+    </div>
+
+    <div class="pad-actions">
+      <button class="delete-btn" onclick="deleteNumber()">← 지우기</button>
+      <button class="check-btn" onclick="checkAnswers()">채점하기</button>
+      <button class="new-btn" onclick="generateQuestions()">새 문제</button>
+    </div>
+  </div>
+
+  <script>
+    let questions = [];
+    let activeIndex = 0;
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function makeQuestion(level) {
+      let a;
+      let b;
+      let answer;
+      let type;
+      let operator;
+
+      if (level === 1) {
+        operator = '+';
+        a = randomInt(1, 5);
+        b = randomInt(1, 5 - a);
+        answer = a + b;
+        type = 'result';
+      }
+
+      if (level === 2) {
+        operator = Math.random() < 0.5 ? '+' : '-';
+
+        if (operator === '+') {
+          a = randomInt(1, 9);
+          b = randomInt(1, 10 - a);
+          answer = a + b;
+        } else {
+          a = randomInt(2, 10);
+          b = randomInt(1, a - 1);
+          answer = a - b;
+        }
+
+        type = 'result';
+      }
+
+      if (level === 3) {
+        operator = '+';
+        a = randomInt(1, 19);
+        b = randomInt(1, 20 - a);
+        answer = a + b;
+        type = Math.random() < 0.5 ? 'result' : 'rightBlank';
+      }
+
+      if (level === 4) {
+        operator = Math.random() < 0.5 ? '+' : '-';
+
+        if (operator === '+') {
+          a = randomInt(1, 19);
+          b = randomInt(1, 20 - a);
+        } else {
+          a = randomInt(2, 20);
+          b = randomInt(1, a - 1);
+        }
+
+        answer = operator === '+' ? a + b : a - b;
+        type = ['result', 'leftBlank', 'rightBlank'][randomInt(0, 2)];
+      }
+
+      if (level === 5) {
+        operator = Math.random() < 0.5 ? '+' : '-';
+
+        if (operator === '+') {
+          a = randomInt(5, 49);
+          b = randomInt(1, 50 - a);
+        } else {
+          a = randomInt(10, 50);
+          b = randomInt(1, a - 1);
+        }
+
+        answer = operator === '+' ? a + b : a - b;
+        type = ['result', 'leftBlank', 'rightBlank'][randomInt(0, 2)];
+      }
+
+      if (type === 'result') {
+        return {
+          parts: [String(a), ' ' + operator + ' ', String(b), ' = '],
+          answer: answer,
+          userAnswer: ''
+        };
+      }
+
+      if (type === 'rightBlank') {
+        return {
+          parts: [String(a), ' ' + operator + ' ', '', ' = ', String(answer)],
+          answer: b,
+          userAnswer: ''
+        };
+      }
+
+      return {
+        parts: ['', ' ' + operator + ' ', String(b), ' = ', String(answer)],
+        answer: a,
+        userAnswer: ''
+      };
+    }
+
+    function generateQuestions() {
+      const level = Number(document.getElementById('levelSelect').value);
+      questions = [];
+
+      for (let i = 0; i < 10; i++) {
+        questions.push(makeQuestion(level));
+      }
+
+      activeIndex = 0;
+      document.getElementById('scoreBox').innerText = '';
+      renderQuestions();
+    }
+
+    function renderQuestions() {
+      const questionList = document.getElementById('questionList');
+      questionList.innerHTML = '';
+
+      questions.forEach((q, index) => {
+        const question = document.createElement('div');
+        question.className = 'question';
+
+        const questionText = document.createElement('div');
+        questionText.className = 'question-text';
+
+        q.parts.forEach((part) => {
+          if (part === '') {
+            const answerBox = document.createElement('span');
+            answerBox.className = 'answer-box';
+            if (index === activeIndex) answerBox.classList.add('active');
+            answerBox.innerText = q.userAnswer || '□';
+            answerBox.onclick = function () {
+              activeIndex = index;
+              renderQuestions();
+            };
+            questionText.appendChild(answerBox);
+          } else {
+            questionText.appendChild(document.createTextNode(part));
+          }
+        });
+
+        const resultMark = document.createElement('div');
+        resultMark.className = 'result-mark';
+        resultMark.id = 'result-' + index;
+
+        question.appendChild(questionText);
+        question.appendChild(resultMark);
+        questionList.appendChild(question);
+      });
+    }
+
+    function pressNumber(num) {
+      if (!questions[activeIndex]) return;
+
+      if (questions[activeIndex].userAnswer.length >= 2) return;
+
+      questions[activeIndex].userAnswer += num;
+
+      if (questions[activeIndex].userAnswer.length >= 2 && activeIndex < questions.length - 1) {
+        activeIndex++;
+      }
+
+      renderQuestions();
+    }
+
+    function deleteNumber() {
+      if (!questions[activeIndex]) return;
+
+      questions[activeIndex].userAnswer = questions[activeIndex].userAnswer.slice(0, -1);
+      renderQuestions();
+    }
+
+    function checkAnswers() {
+      let correctCount = 0;
+
+      questions.forEach((q, index) => {
+        const userValue = Number(q.userAnswer);
+        const result = document.getElementById('result-' + index);
+        const isCorrect = q.userAnswer !== '' && userValue === q.answer;
+
+        if (isCorrect) {
+          correctCount++;
+          result.innerText = '⭕';
+        } else {
+          result.innerText = '❌';
+        }
+      });
+
+      let message = '';
+
+      if (correctCount === 10) {
+        message = '🌟 10개 모두 정답! 정말 잘했어요!';
+      } else if (correctCount >= 8) {
+        message = '🌟 ' + correctCount + '개 정답! 아주 잘했어요!';
+      } else if (correctCount >= 5) {
+        message = '😊 ' + correctCount + '개 정답! 조금만 더 해볼까요?';
+      } else {
+        message = '💪 ' + correctCount + '개 정답! 다시 한번 해봐요!';
+      }
+
+      document.getElementById('scoreBox').innerText = message;
+    }
+
+    generateQuestions();
+  </script>
+
+</body>
+</html>
