@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>한글 공부 | 놀자프린트</title>
+  <meta name="description" content="자음, 모음, 가나다 글자 공부와 글자 찾기 게임, 한글 받아쓰기를 함께 연습할 수 있는 무료 한글 공부 페이지입니다.">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H37MBB00BG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-H37MBB00BG');
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 18px 16px 50px;
+      background: #fffaf0;
+      color: #333;
+    }
+
+    a {
+      color: #ff7a1a;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    h1, h2 {
+      color: #ff7a1a;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 18px 0 8px;
+    }
+
+    .intro {
+      text-align: center;
+      color: #555;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .top-box,
+    .study-box,
+    .game-box,
+    .info-box {
+      background: #fff;
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      margin: 18px 0;
+      text-align: center;
+    }
+
+    .tab-buttons {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 12px 10px;
+      cursor: pointer;
+      background: #ff7a1a;
+      color: white;
+      touch-action: manipulation;
+    }
+
+    button.active {
+      background: #4CAF50;
+    }
+
+    .listen-btn {
+      background: #2196F3;
+      margin-top: 8px;
+    }
+
+    .dictation-btn {
+      background: #4CAF50;
+      font-size: 18px;
+      margin-top: 12px;
+      padding: 14px 20px;
+    }
+
+    .letter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(76px, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .letter-card {
+      background: #fff8e1;
+      border: 3px solid #ffb36b;
+      border-radius: 16px;
+      min-height: 74px;
+      font-size: 34px;
+      font-weight: bold;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .letter-card:hover {
+      background: #e3f2fd;
+      border-color: #2196F3;
+    }
+
+    .selected-letter {
+      margin-top: 18px;
+      background: #fff3d6;
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .big-letter {
+      font-size: 72px;
+      font-weight: bold;
+      color: #ff7a1a;
+      line-height: 1.2;
+    }
+
+    .letter-name {
+      font-size: 24px;
+      font-weight: bold;
+      color: #555;
+      margin-top: 8px;
+    }
+
+    .game-question {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 14px 0;
+      color: #333;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .choice-btn {
+      min-height: 70px;
+      background: #4CAF50;
+      font-size: 32px;
+    }
+
+    .choice-btn.wrong {
+      background: #f44336;
+    }
+
+    .choice-btn.correct {
+      background: #2196F3;
+    }
+
+    .status-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .status-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 8px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      font-weight: bold;
+    }
+
+    .status-label {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    .status-value {
+      font-size: 22px;
+      color: #ff7a1a;
+    }
+
+    .message {
+      min-height: 42px;
+      font-size: 23px;
+      font-weight: bold;
+      color: #4CAF50;
+      margin: 14px 0 4px;
+      line-height: 1.5;
+    }
+
+    .message.wrong {
+      color: #f44336;
+    }
+
+    .hide {
+      display: none !important;
+    }
+
+    .info-box {
+      background: #fff3d6;
+      line-height: 1.7;
+      text-align: left;
+    }
+
+    .info-box strong {
+      color: #ff7a1a;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 14px 12px 40px;
+      }
+
+      .top-box,
+      .study-box,
+      .game-box,
+      .info-box {
+        padding: 14px;
+      }
+
+      .tab-buttons {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .letter-grid {
+        grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+      }
+
+      .letter-card {
+        min-height: 64px;
+        font-size: 30px;
+      }
+
+      .big-letter {
+        font-size: 64px;
+      }
+
+      .choice-btn {
+        min-height: 64px;
+        font-size: 30px;
+      }
+    }
+
+    @media print {
+      a,
+      .top-box,
+      .status-box,
+      .game-box,
+      .info-box,
+      .listen-btn,
+      .dictation-btn {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        padding: 20px;
+      }
+
+      .study-box {
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a href="index.html">← 홈으로</a>
+
+  <h1>한글 공부</h1>
+  <p class="intro">
+    자음, 모음, 가나다 글자를 배우고<br>
+    글자 찾기 게임과 받아쓰기까지 연습해 보세요!
+  </p>
+
+  <div class="top-box">
+    <div class="tab-buttons">
+      <button id="consonantBtn" class="active" onclick="showMode('consonant')">자음</button>
+      <button id="vowelBtn" onclick="showMode('vowel')">모음</button>
+      <button id="syllableBtn" onclick="showMode('syllable')">가나다</button>
+      <button id="gameBtn" onclick="showMode('game')">글자 찾기</button>
+      <button onclick="location.href='hangul-dictation.html'">받아쓰기</button>
+    </div>
+  </div>
+
+  <div class="status-box">
+    <div class="status-card">
+      <div class="status-label">별</div>
+      <div id="starText" class="status-value">⭐ 0</div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-label">연속</div>
+      <div id="streakText" class="status-value">0</div>
+    </div>
+  </div>
+
+  <div id="studyBox" class="study-box">
+    <h2 id="studyTitle">자음 공부</h2>
+    <p id="studyDesc">글자를 누르면 크게 보고 소리로 들을 수 있어요.</p>
+
+    <div id="letterGrid" class="letter-grid"></div>
+
+    <div class="selected-letter">
+      <div id="bigLetter" class="big-letter">ㄱ</div>
+      <div id="letterName" class="letter-name">기역</div>
+      <button class="listen-btn" onclick="speakSelected()">🔊 듣기</button>
+    </div>
+
+    <button onclick="window.print()">프린트</button>
+  </div>
+
+  <div id="gameBox" class="game-box hide">
+    <h2>글자 찾기 게임</h2>
+    <div id="gameQuestion" class="game-question">'가'를 찾아보세요</div>
+    <div id="choiceGrid" class="choice-grid"></div>
+    <div id="messageBox" class="message"></div>
+    <button onclick="makeFindGame()">새 문제</button>
+  </div>
+
+  <div class="info-box">
+    <strong>학습 방법</strong>
+    <br>
+    자음, 모음, 가나다 글자를 눌러서 소리와 모양을 익혀보세요.
+    글자 찾기 게임에서는 제시된 글자를 찾아 누르면 별을 얻을 수 있습니다.
+    <br>
+    더 어려운 연습은 한글 받아쓰기에서 단어와 문장을 듣고 입력할 수 있습니다.
+  </div>
+
+  <script>
+    const letterData = {
+      consonant: [
+        { letter: 'ㄱ', name: '기역' },
+        { letter: 'ㄴ', name: '니은' },
+        { letter: 'ㄷ', name: '디귿' },
+        { letter: 'ㄹ', name: '리을' },
+        { letter: 'ㅁ', name: '미음' },
+        { letter: 'ㅂ', name: '비읍' },
+        { letter: 'ㅅ', name: '시옷' },
+        { letter: 'ㅇ', name: '이응' },
+        { letter: 'ㅈ', name: '지읒' },
+        { letter: 'ㅊ', name: '치읓' },
+        { letter: 'ㅋ', name: '키읔' },
+        { letter: 'ㅌ', name: '티읕' },
+        { letter: 'ㅍ', name: '피읖' },
+        { letter: 'ㅎ', name: '히읗' }
+      ],
+      vowel: [
+        { letter: 'ㅏ', name: '아' },
+        { letter: 'ㅑ', name: '야' },
+        { letter: 'ㅓ', name: '어' },
+        { letter: 'ㅕ', name: '여' },
+        { letter: 'ㅗ', name: '오' },
+        { letter: 'ㅛ', name: '요' },
+        { letter: 'ㅜ', name: '우' },
+        { letter: 'ㅠ', name: '유' },
+        { letter: 'ㅡ', name: '으' },
+        { letter: 'ㅣ', name: '이' }
+      ],
+      syllable: [
+        { letter: '가', name: '가' },
+        { letter: '나', name: '나' },
+        { letter: '다', name: '다' },
+        { letter: '라', name: '라' },
+        { letter: '마', name: '마' },
+        { letter: '바', name: '바' },
+        { letter: '사', name: '사' },
+        { letter: '아', name: '아' },
+        { letter: '자', name: '자' },
+        { letter: '차', name: '차' },
+        { letter: '카', name: '카' },
+        { letter: '타', name: '타' },
+        { letter: '파', name: '파' },
+        { letter: '하', name: '하' }
+      ]
+    };
+
+    let currentMode = 'consonant';
+    let selectedLetter = 'ㄱ';
+    let selectedName = '기역';
+    let currentAnswer = '가';
+    let stars = 0;
+    let streak = 0;
+    let isWaiting = false;
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function shuffleArray(array) {
+      const copied = array.slice();
+
+      for (let i = copied.length - 1; i > 0; i--) {
+        const j = randomInt(0, i);
+        const temp = copied[i];
+        copied[i] = copied[j];
+        copied[j] = temp;
+      }
+
+      return copied;
+    }
+
+    function setActiveButton(mode) {
+      document.getElementById('consonantBtn').classList.remove('active');
+      document.getElementById('vowelBtn').classList.remove('active');
+      document.getElementById('syllableBtn').classList.remove('active');
+      document.getElementById('gameBtn').classList.remove('active');
+
+      if (mode === 'consonant') document.getElementById('consonantBtn').classList.add('active');
+      if (mode === 'vowel') document.getElementById('vowelBtn').classList.add('active');
+      if (mode === 'syllable') document.getElementById('syllableBtn').classList.add('active');
+      if (mode === 'game') document.getElementById('gameBtn').classList.add('active');
+    }
+
+    function showMode(mode) {
+      currentMode = mode;
+      setActiveButton(mode);
+
+      document.getElementById('studyBox').classList.add('hide');
+      document.getElementById('gameBox').classList.add('hide');
+
+      if (mode === 'game') {
+        document.getElementById('gameBox').classList.remove('hide');
+        makeFindGame();
+        return;
+      }
+
+      document.getElementById('studyBox').classList.remove('hide');
+
+      if (mode === 'consonant') {
+        document.getElementById('studyTitle').innerText = '자음 공부';
+        document.getElementById('studyDesc').innerText = '자음을 누르면 이름과 소리를 확인할 수 있어요.';
+      }
+
+      if (mode === 'vowel') {
+        document.getElementById('studyTitle').innerText = '모음 공부';
+        document.getElementById('studyDesc').innerText = '모음을 누르면 소리를 확인할 수 있어요.';
+      }
+
+      if (mode === 'syllable') {
+        document.getElementById('studyTitle').innerText = '가나다 공부';
+        document.getElementById('studyDesc').innerText = '가나다 글자를 누르고 소리로 들어보세요.';
+      }
+
+      buildLetterGrid(mode);
+    }
+
+    function buildLetterGrid(mode) {
+      const grid = document.getElementById('letterGrid');
+      const data = letterData[mode];
+
+      grid.innerHTML = '';
+
+      data.forEach(function(item) {
+        const card = document.createElement('div');
+        card.className = 'letter-card';
+        card.innerText = item.letter;
+        card.onclick = function() {
+          selectLetter(item.letter, item.name);
+        };
+
+        grid.appendChild(card);
+      });
+
+      selectLetter(data[0].letter, data[0].name);
+    }
+
+    function selectLetter(letter, name) {
+      selectedLetter = letter;
+      selectedName = name;
+
+      document.getElementById('bigLetter').innerText = letter;
+      document.getElementById('letterName').innerText = name;
+
+      speakText(letter);
+    }
+
+    function speakSelected() {
+      speakText(selectedLetter);
+    }
+
+    function speakText(text) {
+      if (!('speechSynthesis' in window)) return;
+
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ko-KR';
+      utterance.rate = 0.85;
+      utterance.pitch = 1.0;
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function makeFindGame() {
+      isWaiting = false;
+
+      const pool = letterData.syllable;
+      const answerItem = pool[randomInt(0, pool.length - 1)];
+      currentAnswer = answerItem.letter;
+
+      document.getElementById('gameQuestion').innerText =
+        "'" + currentAnswer + "'를 찾아보세요";
+
+      document.getElementById('messageBox').innerText = '';
+      document.getElementById('messageBox').className = 'message';
+
+      const choices = [answerItem];
+
+      while (choices.length < 4) {
+        const item = pool[randomInt(0, pool.length - 1)];
+
+        if (!choices.some(function(choice) { return choice.letter === item.letter; })) {
+          choices.push(item);
+        }
+      }
+
+      const shuffled = shuffleArray(choices);
+      const choiceGrid = document.getElementById('choiceGrid');
+
+      choiceGrid.innerHTML = '';
+
+      shuffled.forEach(function(item) {
+        const button = document.createElement('button');
+        button.className = 'choice-btn';
+        button.innerText = item.letter;
+        button.onclick = function() {
+          checkFindAnswer(item.letter, button);
+        };
+
+        choiceGrid.appendChild(button);
+      });
+
+      speakText(currentAnswer);
+    }
+
+    function checkFindAnswer(choice, button) {
+      if (isWaiting) return;
+
+      const buttons = document.querySelectorAll('.choice-btn');
+
+      if (choice === currentAnswer) {
+        stars++;
+        streak++;
+        button.classList.add('correct');
+
+        document.getElementById('messageBox').innerText = '🎉 잘했어요!  ⭐ +1';
+        document.getElementById('messageBox').className = 'message';
+
+        buttons.forEach(function(btn) {
+          btn.disabled = true;
+        });
+
+        updateStatus();
+        isWaiting = true;
+
+        setTimeout(function() {
+          makeFindGame();
+        }, 750);
+      } else {
+        streak = 0;
+        button.classList.add('wrong');
+        button.disabled = true;
+
+        document.getElementById('messageBox').innerText = '😅 다시 찾아볼까요?';
+        document.getElementById('messageBox').className = 'message wrong';
+
+        updateStatus();
+      }
+    }
+
+    function updateStatus() {
+      document.getElementById('starText').innerText = '⭐ ' + stars;
+      document.getElementById('streakText').innerText = streak;
+    }
+
+    showMode('consonant');
+  </script>
+
+</body>
+</html>
