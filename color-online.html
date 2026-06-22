@@ -346,7 +346,10 @@
       tempCanvas.height = canvas.height;
 
       tempCtx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+      
+      tempCtx.globalAlpha = 0.45;
       tempCtx.drawImage(canvas, 0, 0);
+      tempCtx.globalAlpha = 1;
 
       const fileName = title.replaceAll(' ', '-') + '-colored.png';
 
