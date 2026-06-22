@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>덧셈 뺄셈 게임 | 놀자프린트</title>
+  <meta name="description" content="아이들이 덧셈과 뺄셈을 게임처럼 연습할 수 있는 무료 수학 학습 페이지입니다. 레벨을 선택하고 별을 모으며 반복 학습할 수 있습니다.">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H37MBB00BG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-H37MBB00BG');
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 18px 16px 150px;
+      background: #fffaf0;
+      color: #333;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    a {
+      color: #ff7a1a;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    h1 {
+      color: #ff7a1a;
+      text-align: center;
+      margin: 18px 0 8px;
+    }
+
+    .intro {
+      text-align: center;
+      margin: 0 0 18px;
+      color: #555;
+      font-size: 16px;
+    }
+
+    .top-box {
+      background: #fff;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    select, button {
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 12px 14px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    select {
+      width: 100%;
+      max-width: 420px;
+      border: 2px solid #ff7a1a;
+      background: white;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background: #ff7a1a;
+      color: white;
+    }
+
+    .small-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .status-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .status-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 8px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      font-weight: bold;
+    }
+
+    .status-label {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    .status-value {
+      font-size: 22px;
+      color: #ff7a1a;
+    }
+
+    .game-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 26px 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .question-count {
+      font-size: 18px;
+      font-weight: bold;
+      color: #777;
+      margin-bottom: 12px;
+    }
+
+    .question {
+      font-size: 44px;
+      font-weight: bold;
+      line-height: 1.5;
+      color: #333;
+      margin: 16px 0 20px;
+      word-break: keep-all;
+    }
+
+    .answer-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 86px;
+      height: 60px;
+      border: 4px solid #ffb36b;
+      border-radius: 14px;
+      background: #fff8e1;
+      color: #333;
+      padding: 0 12px;
+      box-sizing: border-box;
+      vertical-align: middle;
+    }
+
+    .message {
+      min-height: 42px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #4CAF50;
+      margin: 12px 0 4px;
+    }
+
+    .message.wrong {
+      color: #f44336;
+    }
+
+    .finish-box {
+      display: none;
+      background: #fff;
+      border-radius: 24px;
+      padding: 26px 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .finish-title {
+      font-size: 30px;
+      font-weight: bold;
+      color: #ff7a1a;
+      margin-bottom: 12px;
+    }
+
+    .stars-big {
+      font-size: 36px;
+      line-height: 1.5;
+      margin: 14px 0;
+    }
+
+    .finish-message {
+      font-size: 21px;
+      font-weight: bold;
+      color: #4CAF50;
+      margin: 14px 0 20px;
+    }
+
+    .number-pad {
+      position: fixed;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      width: calc(100% - 20px);
+      max-width: 760px;
+      background: rgba(255,255,255,0.98);
+      border: 2px solid #ffd56b;
+      border-radius: 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.16);
+      padding: 12px;
+      box-sizing: border-box;
+      z-index: 100;
+    }
+
+    .number-row {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .number-row button {
+      background: #4CAF50;
+      height: 54px;
+      font-size: 22px;
+      padding: 0;
+    }
+
+    .pad-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .delete-btn {
+      background: #777;
+    }
+
+    .check-btn {
+      background: #2196F3;
+    }
+
+    .info-box {
+      background: #fff3d6;
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 22px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 14px 12px 158px;
+      }
+
+      .status-box {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+      }
+
+      .status-card {
+        padding: 10px 4px;
+      }
+
+      .status-value {
+        font-size: 19px;
+      }
+
+      .question {
+        font-size: 36px;
+      }
+
+      .answer-box {
+        min-width: 74px;
+        height: 54px;
+      }
+
+      .number-row {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a href="index.html">← 홈으로</a>
+
+  <h1>덧셈 뺄셈 게임</h1>
+  <p class="intro">문제를 맞히고 별을 모아보세요!</p>
+
+  <div class="top-box">
+    <select id="levelSelect" onchange="startGame()">
+      <option value="1">Level 1: 5 이하 덧셈</option>
+      <option value="2">Level 2: 10 이하 덧셈/뺄셈</option>
+      <option value="3">Level 3: 20 이하 덧셈</option>
+      <option value="4">Level 4: 20 이하 덧셈/뺄셈 빈칸</option>
+      <option value="5">Level 5: 50 이하 두 자릿수 응용</option>
+    </select>
+
+    <div class="small-buttons">
+      <button onclick="startGame()">처음부터 다시</button>
+      <button onclick="location.href='math-plus-minus.html'">문제지로 풀기</button>
+    </div>
+  </div>
+
+  <div class="status-box">
+    <div class="status-card">
+      <div class="status-label">문제</div>
+      <div id="progressText" class="status-value">1 / 10</div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-label">별</div>
+      <div id="starText" class="status-value">⭐ 0</div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-label">연속</div>
+      <div id="streakText" class="status-value">0</div>
+    </div>
+  </div>
+
+  <div id="gameCard" class="game-card">
+    <div id="questionCount" class="question-count">문제 1</div>
+    <div id="questionBox" class="question"></div>
+    <div id="messageBox" class="message"></div>
+  </div>
+
+  <div id="finishBox" class="finish-box">
+    <div class="finish-title">완료!</div>
+    <div id="finishStars" class="stars-big"></div>
+    <div id="finishMessage" class="finish-message"></div>
+    <button onclick="startGame()">같은 레벨 다시 하기</button>
+  </div>
+
+  <div class="info-box">
+    <strong>학습 방법</strong>
+    <br>
+    숫자를 입력하고 확인을 누르세요. 정답이면 다음 문제로 넘어가고, 틀리면 다시 풀 수 있습니다.
+  </div>
+
+  <div class="number-pad">
+    <div class="number-row">
+      <button onclick="pressNumber('1')">1</button>
+      <button onclick="pressNumber('2')">2</button>
+      <button onclick="pressNumber('3')">3</button>
+      <button onclick="pressNumber('4')">4</button>
+      <button onclick="pressNumber('5')">5</button>
+      <button onclick="pressNumber('6')">6</button>
+      <button onclick="pressNumber('7')">7</button>
+      <button onclick="pressNumber('8')">8</button>
+      <button onclick="pressNumber('9')">9</button>
+      <button onclick="pressNumber('0')">0</button>
+    </div>
+
+    <div class="pad-actions">
+      <button class="delete-btn" onclick="deleteNumber()">← 지우기</button>
+      <button class="check-btn" onclick="checkAnswer()">확인</button>
+    </div>
+  </div>
+
+  <script>
+    let questions = [];
+    let currentIndex = 0;
+    let currentAnswer = '';
+    let stars = 0;
+    let streak = 0;
+    let isWaiting = false;
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function makeQuestion(level) {
+      let a;
+      let b;
+      let answer;
+      let type;
+      let operator;
+
+      if (level === 1) {
+        operator = '+';
+        a = randomInt(1, 4);
+        b = randomInt(1, 5 - a);
+        answer = a + b;
+        type = 'result';
+      }
+
+      if (level === 2) {
+        operator = Math.random() < 0.5 ? '+' : '-';
+
+        if (operator === '+') {
+          a = randomInt(1, 9);
+          b = randomInt(1, 10 - a);
+          answer = a + b;
+        } else {
+          a = randomInt(2, 10);
+          b = randomInt(1, a - 1);
+          answer = a - b;
+        }
+
+        type = 'result';
+      }
+
+      if (level === 3) {
+        operator = '+';
+        a = randomInt(1, 19);
+        b = randomInt(1, 20 - a);
+        answer = a + b;
+        type = Math.random() < 0.65 ? 'result' : 'rightBlank';
+      }
+
+      if (level === 4) {
+        operator = Math.random() < 0.5 ? '+' : '-';
+
+        if (operator === '+') {
+          a = randomInt(1, 19);
+          b = randomInt(1, 20 - a);
+        } else {
+          a = randomInt(2, 20);
+          b = randomInt(1, a - 1);
+        }
+
+        answer = operator === '+' ? a + b : a - b;
+        type = ['result', 'leftBlank', 'rightBlank'][randomInt(0, 2)];
+      }
+
+      if (level === 5) {
+        operator = Math.random() < 0.5 ? '+' : '-';
+
+        if (operator === '+') {
+          a = randomInt(5, 49);
+          b = randomInt(1, 50 - a);
+        } else {
+          a = randomInt(10, 50);
+          b = randomInt(1, a - 1);
+        }
+
+        answer = operator === '+' ? a + b : a - b;
+        type = ['result', 'leftBlank', 'rightBlank'][randomInt(0, 2)];
+      }
+
+      if (type === 'result') {
+        return {
+          text: String(a) + ' ' + operator + ' ' + String(b) + ' = ',
+          blankPosition: 'end',
+          answer: answer
+        };
+      }
+
+      if (type === 'rightBlank') {
+        return {
+          text: String(a) + ' ' + operator + ' □ = ' + String(answer),
+          blankPosition: 'middle',
+          answer: b
+        };
+      }
+
+      return {
+        text: '□ ' + operator + ' ' + String(b) + ' = ' + String(answer),
+        blankPosition: 'start',
+        answer: a
+      };
+    }
+
+    function startGame() {
+      const level = Number(document.getElementById('levelSelect').value);
+
+      questions = [];
+      currentIndex = 0;
+      currentAnswer = '';
+      stars = 0;
+      streak = 0;
+      isWaiting = false;
+
+      for (let i = 0; i < 10; i++) {
+        questions.push(makeQuestion(level));
+      }
+
+      document.getElementById('gameCard').style.display = 'block';
+      document.getElementById('finishBox').style.display = 'none';
+      document.getElementById('messageBox').innerText = '';
+      document.getElementById('messageBox').className = 'message';
+
+      renderQuestion();
+      updateStatus();
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      const questionBox = document.getElementById('questionBox');
+
+      document.getElementById('questionCount').innerText = '문제 ' + (currentIndex + 1);
+
+      if (!q) return;
+
+      const answerHtml = '<span class="answer-box">' + (currentAnswer || '□') + '</span>';
+
+      if (q.blankPosition === 'end') {
+        questionBox.innerHTML = q.text + answerHtml;
+      } else {
+        questionBox.innerHTML = q.text.replace('□', answerHtml);
+      }
+    }
+
+    function updateStatus() {
+      document.getElementById('progressText').innerText = (currentIndex + 1) + ' / 10';
+      document.getElementById('starText').innerText = '⭐ ' + stars;
+      document.getElementById('streakText').innerText = streak;
+    }
+
+    function pressNumber(num) {
+      if (isWaiting) return;
+      if (!questions[currentIndex]) return;
+      if (currentAnswer.length >= 2) return;
+
+      currentAnswer += num;
+      renderQuestion();
+    }
+
+    function deleteNumber() {
+      if (isWaiting) return;
+
+      currentAnswer = currentAnswer.slice(0, -1);
+      renderQuestion();
+    }
+
+    function checkAnswer() {
+      if (isWaiting) return;
+      if (!questions[currentIndex]) return;
+
+      const q = questions[currentIndex];
+      const messageBox = document.getElementById('messageBox');
+
+      if (currentAnswer === '') {
+        messageBox.innerText = '숫자를 입력해 주세요!';
+        messageBox.className = 'message wrong';
+        return;
+      }
+
+      if (Number(currentAnswer) === q.answer) {
+        stars++;
+        streak++;
+
+        if (streak >= 10) {
+          messageBox.innerText = '🔥 10연속 정답! 최고예요!';
+        } else if (streak >= 5) {
+          messageBox.innerText = '🔥 5연속 정답!';
+        } else if (streak >= 3) {
+          messageBox.innerText = '🔥 3연속 정답!';
+        } else {
+          messageBox.innerText = '🎉 정답!';
+        }
+
+        messageBox.className = 'message';
+        updateStatus();
+
+        isWaiting = true;
+
+        setTimeout(function () {
+          nextQuestion();
+        }, 650);
+
+      } else {
+        streak = 0;
+        messageBox.innerText = '😅 다시 생각해볼까?';
+        messageBox.className = 'message wrong';
+        currentAnswer = '';
+        updateStatus();
+
+        setTimeout(function () {
+          renderQuestion();
+        }, 350);
+      }
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      currentAnswer = '';
+      isWaiting = false;
+
+      if (currentIndex >= questions.length) {
+        finishGame();
+        return;
+      }
+
+      document.getElementById('messageBox').innerText = '';
+      document.getElementById('messageBox').className = 'message';
+
+      renderQuestion();
+      updateStatus();
+    }
+
+    function finishGame() {
+      document.getElementById('gameCard').style.display = 'none';
+      document.getElementById('finishBox').style.display = 'block';
+
+      document.getElementById('progressText').innerText = '10 / 10';
+      document.getElementById('starText').innerText = '⭐ ' + stars;
+      document.getElementById('streakText').innerText = streak;
+
+      let starString = '';
+      for (let i = 0; i < stars; i++) {
+        starString += '⭐';
+      }
+
+      document.getElementById('finishStars').innerText = starString;
+
+      if (stars === 10) {
+        document.getElementById('finishMessage').innerText = '10개 모두 정답! 정말 잘했어요!';
+      } else if (stars >= 8) {
+        document.getElementById('finishMessage').innerText = stars + '개 정답! 아주 잘했어요!';
+      } else if (stars >= 5) {
+        document.getElementById('finishMessage').innerText = stars + '개 정답! 조금만 더 해볼까요?';
+      } else {
+        document.getElementById('finishMessage').innerText = stars + '개 정답! 다시 한번 해봐요!';
+      }
+    }
+
+    startGame();
+  </script>
+
+</body>
+</html>
