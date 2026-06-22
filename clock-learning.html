@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>시계 읽기 게임 | 놀자프린트</title>
+  <meta name="description" content="아이들이 온라인에서 시계 읽기를 게임처럼 연습할 수 있는 무료 학습 페이지입니다. 정시, 30분, 5분 단위 시계를 단계별로 배울 수 있습니다.">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H37MBB00BG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-H37MBB00BG');
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 18px 16px 50px;
+      background: #fffaf0;
+      color: #333;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    a {
+      color: #ff7a1a;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    h1 {
+      color: #ff7a1a;
+      text-align: center;
+      margin: 18px 0 8px;
+    }
+
+    .intro {
+      text-align: center;
+      margin: 0 0 18px;
+      color: #555;
+      font-size: 16px;
+    }
+
+    .top-box {
+      background: #fff;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    select, button {
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 12px 14px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    select {
+      width: 100%;
+      max-width: 420px;
+      border: 2px solid #ff7a1a;
+      background: white;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background: #ff7a1a;
+      color: white;
+    }
+
+    .small-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .status-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .status-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 8px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      font-weight: bold;
+    }
+
+    .status-label {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    .status-value {
+      font-size: 22px;
+      color: #ff7a1a;
+    }
+
+    .game-card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 24px 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .question-count {
+      font-size: 18px;
+      font-weight: bold;
+      color: #777;
+      margin-bottom: 10px;
+    }
+
+    canvas {
+      width: 280px;
+      height: 280px;
+      max-width: 100%;
+      background: #fff;
+      border-radius: 50%;
+      margin: 8px auto 16px;
+      display: block;
+    }
+
+    .question-text {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 10px 0 16px;
+      color: #333;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .choice-btn {
+      background: #4CAF50;
+      min-height: 58px;
+      font-size: 20px;
+    }
+
+    .choice-btn.wrong {
+      background: #f44336;
+    }
+
+    .choice-btn.correct {
+      background: #2196F3;
+    }
+
+    .message {
+      min-height: 40px;
+      font-size: 23px;
+      font-weight: bold;
+      color: #4CAF50;
+      margin: 14px 0 4px;
+    }
+
+    .message.wrong {
+      color: #f44336;
+    }
+
+    .finish-box {
+      display: none;
+      background: #fff;
+      border-radius: 24px;
+      padding: 26px 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .finish-title {
+      font-size: 30px;
+      font-weight: bold;
+      color: #ff7a1a;
+      margin-bottom: 12px;
+    }
+
+    .stars-big {
+      font-size: 36px;
+      line-height: 1.5;
+      margin: 14px 0;
+    }
+
+    .finish-message {
+      font-size: 21px;
+      font-weight: bold;
+      color: #4CAF50;
+      margin: 14px 0 20px;
+    }
+
+    .next-level-btn {
+      background: #4CAF50;
+      margin-top: 10px;
+    }
+
+    .info-box {
+      background: #fff3d6;
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 22px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 14px 12px 40px;
+      }
+
+      .status-box {
+        gap: 8px;
+      }
+
+      .status-card {
+        padding: 10px 4px;
+      }
+
+      .status-value {
+        font-size: 19px;
+      }
+
+      canvas {
+        width: 250px;
+        height: 250px;
+      }
+
+      .question-text {
+        font-size: 22px;
+      }
+
+      .choice-btn {
+        min-height: 56px;
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a href="index.html">← 홈으로</a>
+
+  <h1>시계 읽기 게임</h1>
+  <p class="intro">시계를 보고 맞는 시간을 골라보세요!</p>
+
+  <div class="top-box">
+    <select id="levelSelect" onchange="startGame()">
+      <option value="1">Level 1: 정시 읽기</option>
+      <option value="2">Level 2: 30분 읽기</option>
+      <option value="3">Level 3: 5분 단위 읽기</option>
+      <option value="4">Level 4: 랜덤 시계 읽기</option>
+    </select>
+
+    <div class="small-buttons">
+      <button onclick="startGame()">처음부터 다시</button>
+      <button onclick="window.print()">프린트</button>
+    </div>
+  </div>
+
+  <div class="status-box">
+    <div class="status-card">
+      <div class="status-label">문제</div>
+      <div id="progressText" class="status-value">1 / 10</div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-label">별</div>
+      <div id="starText" class="status-value">⭐ 0</div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-label">연속</div>
+      <div id="streakText" class="status-value">0</div>
+    </div>
+  </div>
+
+  <div id="gameCard" class="game-card">
+    <div id="questionCount" class="question-count">문제 1</div>
+    <canvas id="clockCanvas" width="280" height="280"></canvas>
+    <div class="question-text">몇 시인가요?</div>
+    <div id="choiceGrid" class="choice-grid"></div>
+    <div id="messageBox" class="message"></div>
+  </div>
+
+  <div id="finishBox" class="finish-box">
+    <div class="finish-title">완료!</div>
+    <div id="finishStars" class="stars-big"></div>
+    <div id="finishMessage" class="finish-message"></div>
+    <button onclick="startGame()">같은 레벨 다시 하기</button>
+    <button class="next-level-btn" onclick="startNextLevel()">다음 레벨 도전하기</button>
+  </div>
+
+  <div class="info-box">
+    <strong>학습 방법</strong>
+    <br>
+    시계를 보고 맞는 시간을 고르세요. 정답이면 별을 얻고 다음 문제로 넘어갑니다.
+  </div>
+
+  <script>
+    let questions = [];
+    let currentIndex = 0;
+    let stars = 0;
+    let streak = 0;
+    let isWaiting = false;
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function padMinute(minute) {
+      return minute < 10 ? '0' + minute : String(minute);
+    }
+
+    function timeText(hour, minute) {
+      if (minute === 0) {
+        return hour + '시';
+      }
+
+      return hour + '시 ' + minute + '분';
+    }
+
+    function makeQuestion(level) {
+      let hour = randomInt(1, 12);
+      let minute = 0;
+
+      if (level === 1) {
+        minute = 0;
+      }
+
+      if (level === 2) {
+        minute = Math.random() < 0.5 ? 0 : 30;
+      }
+
+      if (level === 3) {
+        minute = randomInt(0, 11) * 5;
+      }
+
+      if (level === 4) {
+        const minuteList = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+        minute = minuteList[randomInt(0, minuteList.length - 1)];
+      }
+
+      return {
+        hour: hour,
+        minute: minute,
+        answer: timeText(hour, minute)
+      };
+    }
+
+    function makeChoices(question) {
+      const choices = [question.answer];
+
+      while (choices.length < 4) {
+        let h = randomInt(1, 12);
+        let m = question.minute;
+
+        if (Math.random() < 0.5) {
+          h = question.hour;
+          m = randomInt(0, 11) * 5;
+        }
+
+        const text = timeText(h, m);
+
+        if (!choices.includes(text)) {
+          choices.push(text);
+        }
+      }
+
+      return shuffleArray(choices);
+    }
+
+    function shuffleArray(array) {
+      const copied = array.slice();
+
+      for (let i = copied.length - 1; i > 0; i--) {
+        const j = randomInt(0, i);
+        const temp = copied[i];
+        copied[i] = copied[j];
+        copied[j] = temp;
+      }
+
+      return copied;
+    }
+
+    function startGame() {
+      const level = Number(document.getElementById('levelSelect').value);
+
+      questions = [];
+      currentIndex = 0;
+      stars = 0;
+      streak = 0;
+      isWaiting = false;
+
+      const usedQuestions = new Set();
+
+      while (questions.length < 10) {
+        const q = makeQuestion(level);
+        const key = q.answer;
+
+        if (!usedQuestions.has(key)) {
+          usedQuestions.add(key);
+          questions.push(q);
+        }
+      }
+
+      document.getElementById('gameCard').style.display = 'block';
+      document.getElementById('finishBox').style.display = 'none';
+      document.getElementById('messageBox').innerText = '';
+      document.getElementById('messageBox').className = 'message';
+
+      renderQuestion();
+      updateStatus();
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+
+      if (!q) return;
+
+      document.getElementById('questionCount').innerText = '문제 ' + (currentIndex + 1);
+      document.getElementById('messageBox').innerText = '';
+      document.getElementById('messageBox').className = 'message';
+
+      drawClock(q.hour, q.minute);
+      renderChoices(q);
+    }
+
+    function renderChoices(question) {
+      const choiceGrid = document.getElementById('choiceGrid');
+      const choices = makeChoices(question);
+
+      choiceGrid.innerHTML = '';
+
+      choices.forEach(function(choice) {
+        const button = document.createElement('button');
+        button.className = 'choice-btn';
+        button.innerText = choice;
+        button.onclick = function() {
+          checkAnswer(choice, button);
+        };
+
+        choiceGrid.appendChild(button);
+      });
+    }
+
+    function drawClock(hour, minute) {
+      const canvas = document.getElementById('clockCanvas');
+      const ctx = canvas.getContext('2d');
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = 110;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff8e1';
+      ctx.fill();
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = '#ffb36b';
+      ctx.stroke();
+
+      for (let i = 1; i <= 12; i++) {
+        const angle = (i - 3) * Math.PI / 6;
+        const x = centerX + Math.cos(angle) * 88;
+        const y = centerY + Math.sin(angle) * 88;
+
+        ctx.fillStyle = '#333';
+        ctx.font = 'bold 22px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(String(i), x, y);
+      }
+
+      for (let i = 0; i < 60; i++) {
+        const angle = (i - 15) * Math.PI / 30;
+        const outerX = centerX + Math.cos(angle) * 104;
+        const outerY = centerY + Math.sin(angle) * 104;
+        const innerRadius = i % 5 === 0 ? 98 : 101;
+        const innerX = centerX + Math.cos(angle) * innerRadius;
+        const innerY = centerY + Math.sin(angle) * innerRadius;
+
+        ctx.beginPath();
+        ctx.moveTo(innerX, innerY);
+        ctx.lineTo(outerX, outerY);
+        ctx.lineWidth = i % 5 === 0 ? 3 : 1;
+        ctx.strokeStyle = '#555';
+        ctx.stroke();
+      }
+
+      const minuteAngle = (minute - 15) * Math.PI / 30;
+      const hourAngle = ((hour % 12) + minute / 60 - 3) * Math.PI / 6;
+
+      drawHand(ctx, centerX, centerY, hourAngle, 58, 8, '#333');
+      drawHand(ctx, centerX, centerY, minuteAngle, 82, 5, '#2196F3');
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 7, 0, Math.PI * 2);
+      ctx.fillStyle = '#ff7a1a';
+      ctx.fill();
+    }
+
+    function drawHand(ctx, centerX, centerY, angle, length, width, color) {
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(
+        centerX + Math.cos(angle) * length,
+        centerY + Math.sin(angle) * length
+      );
+      ctx.lineWidth = width;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = color;
+      ctx.stroke();
+    }
+
+    function checkAnswer(choice, button) {
+      if (isWaiting) return;
+
+      const q = questions[currentIndex];
+      const messageBox = document.getElementById('messageBox');
+      const buttons = document.querySelectorAll('.choice-btn');
+
+      if (choice === q.answer) {
+        stars++;
+        streak++;
+        button.classList.add('correct');
+        messageBox.innerText = '🎉 정답!  ⭐ +1';
+        messageBox.className = 'message';
+
+        buttons.forEach(function(btn) {
+          btn.disabled = true;
+        });
+
+        updateStatus();
+        isWaiting = true;
+
+        setTimeout(function() {
+          nextQuestion();
+        }, 700);
+      } else {
+        streak = 0;
+        button.classList.add('wrong');
+        button.disabled = true;
+        messageBox.innerText = '😅 다시 골라볼까요?';
+        messageBox.className = 'message wrong';
+        updateStatus();
+      }
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      isWaiting = false;
+
+      if (currentIndex >= questions.length) {
+        finishGame();
+        return;
+      }
+
+      renderQuestion();
+      updateStatus();
+    }
+
+    function updateStatus() {
+      document.getElementById('progressText').innerText = (currentIndex + 1) + ' / 10';
+      document.getElementById('starText').innerText = '⭐ ' + stars;
+      document.getElementById('streakText').innerText = streak;
+    }
+
+    function finishGame() {
+      document.getElementById('gameCard').style.display = 'none';
+      document.getElementById('finishBox').style.display = 'block';
+
+      document.getElementById('progressText').innerText = '10 / 10';
+      document.getElementById('starText').innerText = '⭐ ' + stars;
+      document.getElementById('streakText').innerText = streak;
+
+      let starString = '';
+
+      for (let i = 0; i < stars; i++) {
+        starString += '⭐';
+      }
+
+      document.getElementById('finishStars').innerText = starString || '⭐ 0';
+
+      if (stars === 10) {
+        document.getElementById('finishMessage').innerText = '10개 모두 정답! 시계를 정말 잘 읽어요!';
+      } else if (stars >= 8) {
+        document.getElementById('finishMessage').innerText = stars + '개 정답! 아주 잘했어요!';
+      } else if (stars >= 5) {
+        document.getElementById('finishMessage').innerText = stars + '개 정답! 조금만 더 연습해봐요!';
+      } else {
+        document.getElementById('finishMessage').innerText = stars + '개 정답! 다시 한번 해봐요!';
+      }
+    }
+
+    function startNextLevel() {
+      const levelSelect = document.getElementById('levelSelect');
+      const currentLevel = Number(levelSelect.value);
+
+      if (currentLevel < 4) {
+        levelSelect.value = String(currentLevel + 1);
+        startGame();
+      } else {
+        startGame();
+      }
+    }
+
+    startGame();
+  </script>
+
+</body>
+</html>
