@@ -88,6 +88,14 @@
       grid-template-columns: 70px 70px 70px;
       gap: 10px;
       justify-content: center;
+    
+      position: sticky;
+      bottom: 10px;
+      z-index: 100;
+    
+      background: rgba(255,255,255,0.95);
+      padding: 12px;
+      border-radius: 12px;
     }
 
     .mobile-pad button {
@@ -178,17 +186,30 @@
     <div class="message" id="message"></div>
 
     <div class="mobile-pad print-hide">
+    
+      <button
+        onclick="resetPlayer()"
+        style="
+          grid-column:1 / span 3;
+          background:#F44336;
+          height:50px;
+          font-size:18px;
+        ">
+        ↺ 다시 시작
+      </button>
+    
       <div class="empty"></div>
       <button onclick="movePlayer(0, -1)">▲</button>
       <div class="empty"></div>
-
+    
       <button onclick="movePlayer(-1, 0)">◀</button>
-      <button onclick="resetPlayer()">↺</button>
+      <div class="empty"></div>
       <button onclick="movePlayer(1, 0)">▶</button>
-
+    
       <div class="empty"></div>
       <button onclick="movePlayer(0, 1)">▼</button>
       <div class="empty"></div>
+    
     </div>
 
   </div>
