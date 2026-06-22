@@ -289,29 +289,34 @@
 
     function draw(event) {
       if (!drawing) return;
-
+    
       const pos = getPosition(event);
-
+    
       ctx.lineWidth = brushSize;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-
+    
       if (currentColor === 'eraser') {
         ctx.globalCompositeOperation = 'destination-out';
+        ctx.globalAlpha = 1;
       } else {
         ctx.globalCompositeOperation = 'source-over';
+        ctx.globalAlpha = 0.35;
         ctx.strokeStyle = currentColor;
       }
-
+    
       ctx.lineTo(pos.x, pos.y);
       ctx.stroke();
-
+    
+      ctx.globalAlpha = 1;
+    
       event.preventDefault();
     }
 
     function stopDrawing() {
       drawing = false;
       ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
     }
 
     function undo() {
