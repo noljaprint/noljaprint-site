@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>구구단 게임 | 놀자프린트</title>
+  <meta name="description" content="아이들이 구구단을 공부하고, 랜덤 연습하고, 문제풀이까지 할 수 있는 무료 구구단 학습 게임입니다.">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H37MBB00BG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-H37MBB00BG');
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 18px 16px 150px;
+      background: #fffaf0;
+      color: #333;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    a {
+      color: #ff7a1a;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    h1, h2 {
+      color: #ff7a1a;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 18px 0 8px;
+    }
+
+    .intro {
+      text-align: center;
+      color: #555;
+      font-size: 16px;
+      margin-bottom: 18px;
+    }
+
+    .top-box, .section-box, .game-card, .finish-box {
+      background: #fff;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      margin: 18px 0;
+      text-align: center;
+    }
+
+    select, button {
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 12px 14px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    select {
+      width: 100%;
+      max-width: 360px;
+      border: 2px solid #ff7a1a;
+      background: white;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background: #ff7a1a;
+      color: white;
+    }
+
+    .mode-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .mode-buttons button {
+      min-height: 54px;
+    }
+
+    .mode-buttons button.active {
+      background: #4CAF50;
+    }
+
+    .status-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .status-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 8px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      font-weight: bold;
+    }
+
+    .status-label {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    .status-value {
+      font-size: 22px;
+      color: #ff7a1a;
+    }
+
+    .study-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .study-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #fff8e1;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .answer-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 76px;
+      height: 48px;
+      border: 3px solid #ffb36b;
+      border-radius: 10px;
+      background: white;
+      color: #333;
+      padding: 0 8px;
+      box-sizing: border-box;
+    }
+
+    .answer-box.active {
+      border-color: #2196F3;
+      background: #e3f2fd;
+    }
+
+    .answer-box.correct {
+      border-color: #4CAF50;
+      background: #e8f5e9;
+    }
+
+    .answer-box.wrong {
+      border-color: #f44336;
+      background: #ffebee;
+    }
+
+    .mark {
+      width: 36px;
+      font-size: 22px;
+    }
+
+    .question-count {
+      font-size: 18px;
+      font-weight: bold;
+      color: #777;
+      margin-bottom: 12px;
+    }
+
+    .question {
+      font-size: 46px;
+      font-weight: bold;
+      line-height: 1.5;
+      margin: 22px 0;
+      color: #333;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .choice-btn {
+      background: #4CAF50;
+      min-height: 58px;
+      font-size: 22px;
+    }
+
+    .choice-btn.wrong {
+      background: #f44336;
+    }
+
+    .choice-btn.correct {
+      background: #2196F3;
+    }
+
+    .message {
+      min-height: 42px;
+      font-size: 23px;
+      font-weight: bold;
+      color: #4CAF50;
+      margin: 14px 0 4px;
+    }
+
+    .message.wrong {
+      color: #f44336;
+    }
+
+    .finish-box {
+      display: none;
+    }
+
+    .finish-title {
+      font-size: 30px;
+      font-weight: bold;
+      color: #ff7a1a;
+      margin-bottom: 12px;
+    }
+
+    .stars-big {
+      font-size: 36px;
+      line-height: 1.5;
+      margin: 14px 0;
+    }
+
+    .finish-message {
+      font-size: 21px;
+      font-weight: bold;
+      color: #4CAF50;
+      margin: 14px 0 20px;
+    }
+
+    .info-box {
+      background: #fff3d6;
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 22px;
+      line-height: 1.7;
+    }
+
+    .number-pad {
+      position: fixed;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      width: calc(100% - 20px);
+      max-width: 820px;
+      background: rgba(255,255,255,0.98);
+      border: 2px solid #ffd56b;
+      border-radius: 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.16);
+      padding: 12px;
+      box-sizing: border-box;
+      z-index: 100;
+    }
+
+    .number-row {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .number-row button {
+      background: #4CAF50;
+      height: 54px;
+      font-size: 22px;
+      padding: 0;
+    }
+
+    .pad-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .delete-btn {
+      background: #777;
+    }
+
+    .check-btn {
+      background: #2196F3;
+    }
+
+    .hide {
+      display: none !important;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 14px 12px 158px;
+      }
+
+      .mode-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .status-box {
+        gap: 8px;
+      }
+
+      .status-card {
+        padding: 10px 4px;
+      }
+
+      .status-value {
+        font-size: 19px;
+      }
+
+      .study-row {
+        font-size: 23px;
+        gap: 6px;
+      }
+
+      .answer-box {
+        min-width: 62px;
+        height: 44px;
+      }
+
+      .question {
+        font-size: 40px;
+      }
+
+      .number-row {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    @media print {
+      .top-box,
+      .status-box,
+      .number-pad,
+      .info-box,
+      .game-card,
+      .finish-box,
+      a {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        padding: 20px;
+      }
+
+      .section-box {
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+
+      .answer-box {
+        color: transparent;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a href="index.html">← 홈으로</a>
+
+  <h1>구구단 게임</h1>
+  <p class="intro">구구단을 공부하고, 연습하고, 문제풀이까지 해보세요!</p>
+
+  <div class="top-box">
+    <select id="danSelect" onchange="resetCurrentMode()">
+      <option value="2">2단</option>
+      <option value="3">3단</option>
+      <option value="4">4단</option>
+      <option value="5">5단</option>
+      <option value="6">6단</option>
+      <option value="7">7단</option>
+      <option value="8">8단</option>
+      <option value="9">9단</option>
+      <option value="random">랜덤</option>
+    </select>
+
+    <div class="mode-buttons">
+      <button id="studyBtn" class="active" onclick="showStudyMode()">1. 공부하기</button>
+      <button id="practiceBtn" onclick="showPracticeMode()">2. 랜덤 연습</button>
+      <button id="quizBtn" onclick="showQuizMode()">3. 문제풀이</button>
+    </div>
+  </div>
+
+  <div class="status-box">
+    <div class="status-card">
+      <div class="status-label">문제</div>
+      <div id="progressText" class="status-value">-</div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-label">별</div>
+      <div id="starText" class="status-value">⭐ 0</div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-label">연속</div>
+      <div id="streakText" class="status-value">0</div>
+    </div>
+  </div>
+
+  <div id="studySection" class="section-box">
+    <h2>공부하기</h2>
+    <p>빈칸을 누르고 아래 숫자패드로 답을 채워보세요.</p>
+    <div id="studyList" class="study-list"></div>
+    <div id="studyMessage" class="message"></div>
+    <button onclick="checkStudyAnswers()">정답 확인</button>
+    <button onclick="buildStudyList()">다시 하기</button>
+    <button onclick="window.print()">프린트</button>
+  </div>
+
+  <div id="practiceSection" class="game-card hide">
+    <div id="practiceCount" class="question-count">랜덤 연습</div>
+    <div id="practiceQuestion" class="question"></div>
+    <div id="practiceMessage" class="message"></div>
+  </div>
+
+  <div id="quizSection" class="game-card hide">
+    <div id="quizCount" class="question-count">문제 1</div>
+    <div id="quizQuestion" class="question"></div>
+    <div id="choiceGrid" class="choice-grid"></div>
+    <div id="quizMessage" class="message"></div>
+  </div>
+
+  <div id="finishBox" class="finish-box">
+    <div class="finish-title">완료!</div>
+    <div id="finishStars" class="stars-big"></div>
+    <div id="finishMessage" class="finish-message"></div>
+    <button onclick="showQuizMode()">같은 문제 다시 풀기</button>
+    <button onclick="startNextDan()">다음 단 도전하기</button>
+  </div>
+
+  <div class="info-box">
+    <strong>학습 방법</strong>
+    <br>
+    먼저 공부하기에서 구구단을 채워보고, 랜덤 연습으로 반복한 다음, 문제풀이에서 10문제를 풀어보세요.
+  </div>
+
+  <div class="number-pad">
+    <div class="number-row">
+      <button onclick="pressNumber('1')">1</button>
+      <button onclick="pressNumber('2')">2</button>
+      <button onclick="pressNumber('3')">3</button>
+      <button onclick="pressNumber('4')">4</button>
+      <button onclick="pressNumber('5')">5</button>
+      <button onclick="pressNumber('6')">6</button>
+      <button onclick="pressNumber('7')">7</button>
+      <button onclick="pressNumber('8')">8</button>
+      <button onclick="pressNumber('9')">9</button>
+      <button onclick="pressNumber('0')">0</button>
+    </div>
+
+    <div class="pad-actions">
+      <button class="delete-btn" onclick="deleteNumber()">← 지우기</button>
+      <button class="check-btn" onclick="checkPracticeAnswer()">확인</button>
+    </div>
+  </div>
+
+  <script>
+    let currentMode = 'study';
+    let activeStudyIndex = 0;
+    let studyAnswers = [];
+    let practiceQuestion = null;
+    let practiceAnswer = '';
+    let quizQuestions = [];
+    let currentQuizIndex = 0;
+    let stars = 0;
+    let streak = 0;
+    let isWaiting = false;
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function shuffleArray(array) {
+      const copied = array.slice();
+
+      for (let i = copied.length - 1; i > 0; i--) {
+        const j = randomInt(0, i);
+        const temp = copied[i];
+        copied[i] = copied[j];
+        copied[j] = temp;
+      }
+
+      return copied;
+    }
+
+    function getSelectedDan() {
+      return document.getElementById('danSelect').value;
+    }
+
+    function getQuestionDan() {
+      const selected = getSelectedDan();
+
+      if (selected === 'random') {
+        return randomInt(2, 9);
+      }
+
+      return Number(selected);
+    }
+
+    function makeMultiplicationQuestion() {
+      const dan = getQuestionDan();
+      const number = randomInt(1, 9);
+
+      return {
+        dan: dan,
+        number: number,
+        answer: dan * number,
+        text: dan + ' × ' + number + ' = ?'
+      };
+    }
+
+    function setActiveButton(mode) {
+      document.getElementById('studyBtn').classList.remove('active');
+      document.getElementById('practiceBtn').classList.remove('active');
+      document.getElementById('quizBtn').classList.remove('active');
+
+      if (mode === 'study') {
+        document.getElementById('studyBtn').classList.add('active');
+      }
+
+      if (mode === 'practice') {
+        document.getElementById('practiceBtn').classList.add('active');
+      }
+
+      if (mode === 'quiz') {
+        document.getElementById('quizBtn').classList.add('active');
+      }
+    }
+
+    function hideAllSections() {
+      document.getElementById('studySection').classList.add('hide');
+      document.getElementById('practiceSection').classList.add('hide');
+      document.getElementById('quizSection').classList.add('hide');
+      document.getElementById('finishBox').style.display = 'none';
+    }
+
+    function resetStatus() {
+      stars = 0;
+      streak = 0;
+      isWaiting = false;
+      updateStatus('-');
+    }
+
+    function resetCurrentMode() {
+      if (currentMode === 'study') {
+        showStudyMode();
+      } else if (currentMode === 'practice') {
+        showPracticeMode();
+      } else {
+        showQuizMode();
+      }
+    }
+
+    function showStudyMode() {
+      currentMode = 'study';
+      setActiveButton('study');
+      hideAllSections();
+      document.getElementById('studySection').classList.remove('hide');
+      resetStatus();
+      buildStudyList();
+    }
+
+    function showPracticeMode() {
+      currentMode = 'practice';
+      setActiveButton('practice');
+      hideAllSections();
+      document.getElementById('practiceSection').classList.remove('hide');
+      resetStatus();
+      makePracticeQuestion();
+    }
+
+    function showQuizMode() {
+      currentMode = 'quiz';
+      setActiveButton('quiz');
+      hideAllSections();
+      document.getElementById('quizSection').classList.remove('hide');
+      resetStatus();
+      buildQuizQuestions();
+      renderQuizQuestion();
+    }
+
+    function buildStudyList() {
+      const selected = getSelectedDan();
+      const studyList = document.getElementById('studyList');
+
+      studyAnswers = [];
+      activeStudyIndex = 0;
+      studyList.innerHTML = '';
+      document.getElementById('studyMessage').innerText = '';
+      document.getElementById('studyMessage').className = 'message';
+
+      if (selected === 'random') {
+        document.getElementById('studyMessage').innerText = '공부하기는 2단~9단 중 하나를 선택해 주세요.';
+        return;
+      }
+
+      const dan = Number(selected);
+
+      for (let i = 1; i <= 9; i++) {
+        studyAnswers.push('');
+
+        const row = document.createElement('div');
+        row.className = 'study-row';
+
+        const left = document.createElement('span');
+        left.innerText = dan + ' × ' + i + ' = ';
+
+        const answerBox = document.createElement('span');
+        answerBox.className = 'answer-box';
+        answerBox.innerText = '□';
+        answerBox.onclick = function() {
+          activeStudyIndex = i - 1;
+          renderStudyList();
+        };
+
+        const mark = document.createElement('span');
+        mark.className = 'mark';
+        mark.id = 'studyMark' + (i - 1);
+
+        row.appendChild(left);
+        row.appendChild(answerBox);
+        row.appendChild(mark);
+        studyList.appendChild(row);
+      }
+
+      renderStudyList();
+    }
+
+    function renderStudyList() {
+      const boxes = document.querySelectorAll('#studyList .answer-box');
+
+      boxes.forEach(function(box, index) {
+        box.className = 'answer-box';
+        if (index === activeStudyIndex) {
+          box.classList.add('active');
+        }
+        box.innerText = studyAnswers[index] || '□';
+      });
+    }
+
+    function checkStudyAnswers() {
+      const selected = getSelectedDan();
+
+      if (selected === 'random') return;
+
+      const dan = Number(selected);
+      let correctCount = 0;
+
+      for (let i = 1; i <= 9; i++) {
+        const userValue = Number(studyAnswers[i - 1]);
+        const answer = dan * i;
+        const mark = document.getElementById('studyMark' + (i - 1));
+        const box = document.querySelectorAll('#studyList .answer-box')[i - 1];
+
+        box.classList.remove('correct');
+        box.classList.remove('wrong');
+
+        if (studyAnswers[i - 1] !== '' && userValue === answer) {
+          correctCount++;
+          mark.innerText = '⭕';
+          box.classList.add('correct');
+        } else {
+          mark.innerText = '❌';
+          box.classList.add('wrong');
+        }
+      }
+
+      if (correctCount === 9) {
+        document.getElementById('studyMessage').innerText = '🎉 모두 정답! 정말 잘했어요!';
+      } else {
+        document.getElementById('studyMessage').innerText = correctCount + '개 정답! 다시 한번 해봐요!';
+      }
+    }
+
+    function makePracticeQuestion() {
+      practiceQuestion = makeMultiplicationQuestion();
+      practiceAnswer = '';
+
+      document.getElementById('practiceQuestion').innerHTML =
+        practiceQuestion.dan + ' × ' + practiceQuestion.number + ' = ' +
+        '<span class="answer-box active">□</span>';
+
+      document.getElementById('practiceMessage').innerText = '';
+      document.getElementById('practiceMessage').className = 'message';
+      document.getElementById('practiceCount').innerText = '랜덤 연습';
+      updateStatus('-');
+    }
+
+    function renderPracticeAnswer() {
+      if (!practiceQuestion) return;
+
+      document.getElementById('practiceQuestion').innerHTML =
+        practiceQuestion.dan + ' × ' + practiceQuestion.number + ' = ' +
+        '<span class="answer-box active">' + (practiceAnswer || '□') + '</span>';
+    }
+
+    function checkPracticeAnswer() {
+      if (currentMode !== 'practice') return;
+      if (isWaiting) return;
+      if (!practiceQuestion) return;
+
+      const messageBox = document.getElementById('practiceMessage');
+
+      if (practiceAnswer === '') {
+        messageBox.innerText = '숫자를 입력해 주세요!';
+        messageBox.className = 'message wrong';
+        return;
+      }
+
+      if (Number(practiceAnswer) === practiceQuestion.answer) {
+        stars++;
+        streak++;
+        messageBox.innerText = '🎉 정답!  ⭐ +1';
+        messageBox.className = 'message';
+        updateStatus('-');
+
+        isWaiting = true;
+
+        setTimeout(function() {
+          isWaiting = false;
+          makePracticeQuestion();
+        }, 650);
+      } else {
+        streak = 0;
+        practiceAnswer = '';
+        messageBox.innerText = '😅 다시 생각해볼까?';
+        messageBox.className = 'message wrong';
+        updateStatus('-');
+
+        setTimeout(function() {
+          renderPracticeAnswer();
+        }, 300);
+      }
+    }
+
+    function buildQuizQuestions() {
+      quizQuestions = [];
+      currentQuizIndex = 0;
+
+      const usedQuestions = new Set();
+
+      while (quizQuestions.length < 10) {
+        const q = makeMultiplicationQuestion();
+        const key = q.dan + 'x' + q.number;
+
+        if (!usedQuestions.has(key)) {
+          usedQuestions.add(key);
+          quizQuestions.push(q);
+        }
+      }
+    }
+
+    function renderQuizQuestion() {
+      const q = quizQuestions[currentQuizIndex];
+
+      if (!q) return;
+
+      document.getElementById('quizCount').innerText = '문제 ' + (currentQuizIndex + 1);
+      document.getElementById('quizQuestion').innerText = q.text;
+      document.getElementById('quizMessage').innerText = '';
+      document.getElementById('quizMessage').className = 'message';
+
+      renderChoices(q);
+      updateStatus((currentQuizIndex + 1) + ' / 10');
+    }
+
+    function makeChoices(question) {
+      const choices = [question.answer];
+
+      while (choices.length < 4) {
+        const offsetList = [-18, -12, -9, -8, -6, -4, 4, 6, 8, 9, 12, 18];
+        const offset = offsetList[randomInt(0, offsetList.length - 1)];
+        let wrong = question.answer + offset;
+
+        if (wrong <= 0 || wrong > 81) {
+          wrong = randomInt(1, 9) * randomInt(2, 9);
+        }
+
+        if (!choices.includes(wrong)) {
+          choices.push(wrong);
+        }
+      }
+
+      return shuffleArray(choices);
+    }
+
+    function renderChoices(question) {
+      const choiceGrid = document.getElementById('choiceGrid');
+      const choices = makeChoices(question);
+
+      choiceGrid.innerHTML = '';
+
+      choices.forEach(function(choice) {
+        const button = document.createElement('button');
+        button.className = 'choice-btn';
+        button.innerText = choice;
+        button.onclick = function() {
+          checkQuizAnswer(choice, button);
+        };
+
+        choiceGrid.appendChild(button);
+      });
+    }
+
+    function checkQuizAnswer(choice, button) {
+      if (isWaiting) return;
+
+      const q = quizQuestions[currentQuizIndex];
+      const buttons = document.querySelectorAll('.choice-btn');
+      const messageBox = document.getElementById('quizMessage');
+
+      if (choice === q.answer) {
+        stars++;
+        streak++;
+        button.classList.add('correct');
+        messageBox.innerText = '🎉 정답!  ⭐ +1';
+        messageBox.className = 'message';
+
+        buttons.forEach(function(btn) {
+          btn.disabled = true;
+        });
+
+        updateStatus((currentQuizIndex + 1) + ' / 10');
+        isWaiting = true;
+
+        setTimeout(function() {
+          nextQuizQuestion();
+        }, 700);
+      } else {
+        streak = 0;
+        button.classList.add('wrong');
+        button.disabled = true;
+        messageBox.innerText = '😅 다시 골라볼까요?';
+        messageBox.className = 'message wrong';
+        updateStatus((currentQuizIndex + 1) + ' / 10');
+      }
+    }
+
+    function nextQuizQuestion() {
+      currentQuizIndex++;
+      isWaiting = false;
+
+      if (currentQuizIndex >= quizQuestions.length) {
+        finishQuiz();
+        return;
+      }
+
+      renderQuizQuestion();
+    }
+
+    function finishQuiz() {
+      document.getElementById('quizSection').classList.add('hide');
+      document.getElementById('finishBox').style.display = 'block';
+
+      updateStatus('10 / 10');
+
+      let starString = '';
+
+      for (let i = 0; i < stars; i++) {
+        starString += '⭐';
+      }
+
+      document.getElementById('finishStars').innerText = starString || '⭐ 0';
+
+      if (stars === 10) {
+        document.getElementById('finishMessage').innerText = '10개 모두 정답! 구구단을 정말 잘해요!';
+      } else if (stars >= 8) {
+        document.getElementById('finishMessage').innerText = stars + '개 정답! 아주 잘했어요!';
+      } else if (stars >= 5) {
+        document.getElementById('finishMessage').innerText = stars + '개 정답! 조금만 더 연습해봐요!';
+      } else {
+        document.getElementById('finishMessage').innerText = stars + '개 정답! 다시 한번 해봐요!';
+      }
+    }
+
+    function startNextDan() {
+      const danSelect = document.getElementById('danSelect');
+      const selected = danSelect.value;
+
+      if (selected === 'random') {
+        showQuizMode();
+        return;
+      }
+
+      const currentDan = Number(selected);
+
+      if (currentDan < 9) {
+        danSelect.value = String(currentDan + 1);
+      } else {
+        danSelect.value = 'random';
+      }
+
+      showQuizMode();
+    }
+
+    function updateStatus(progress) {
+      document.getElementById('progressText').innerText = progress;
+      document.getElementById('starText').innerText = '⭐ ' + stars;
+      document.getElementById('streakText').innerText = streak;
+    }
+
+    function pressNumber(num) {
+      if (currentMode === 'study') {
+        if (studyAnswers[activeStudyIndex].length >= 2) return;
+
+        studyAnswers[activeStudyIndex] += num;
+
+        if (studyAnswers[activeStudyIndex].length >= 2 && activeStudyIndex < studyAnswers.length - 1) {
+          activeStudyIndex++;
+        }
+
+        renderStudyList();
+        return;
+      }
+
+      if (currentMode === 'practice') {
+        if (practiceAnswer.length >= 2) return;
+
+        practiceAnswer += num;
+        renderPracticeAnswer();
+      }
+    }
+
+    function deleteNumber() {
+      if (currentMode === 'study') {
+        studyAnswers[activeStudyIndex] = studyAnswers[activeStudyIndex].slice(0, -1);
+        renderStudyList();
+        return;
+      }
+
+      if (currentMode === 'practice') {
+        practiceAnswer = practiceAnswer.slice(0, -1);
+        renderPracticeAnswer();
+      }
+    }
+
+    showStudyMode();
+  </script>
+
+</body>
+</html>
