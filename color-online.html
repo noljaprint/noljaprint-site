@@ -83,6 +83,10 @@
     #baseImage {
       display: block;
       width: 100%;
+      position: relative;
+      z-index: 2;
+      pointer-events: none;
+      user-select: none;
     }
 
     #drawCanvas {
@@ -90,8 +94,21 @@
       left: 0;
       top: 0;
       width: 100%;
+      z-index: 1;
       touch-action: none;
       cursor: crosshair;
+    }
+
+    .notice-box {
+      background: #fff8e1;
+      border: 1px solid #ffd56b;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin: 20px auto;
+      max-width: 850px;
+      text-align: center;
+      color: #333;
+      box-sizing: border-box;
     }
 
     .action-area {
@@ -108,6 +125,7 @@
       font-size: 17px;
       cursor: pointer;
       margin: 5px;
+      font-weight: bold;
     }
 
     .gray-btn {
@@ -124,6 +142,14 @@
 
     .eraser-btn {
       background: #9E9E9E;
+    }
+
+    .guide-box {
+      background: #fff8e1;
+      border: 1px solid #ffd56b;
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 30px;
     }
 
     @media print {
@@ -175,8 +201,12 @@
   </div>
 
   <div class="canvas-wrap" id="canvasWrap">
-    <img id="baseImage" src="" alt="온라인 색칠 도안">
     <canvas id="drawCanvas"></canvas>
+    <img id="baseImage" src="" alt="온라인 색칠 도안">
+  </div>
+
+  <div class="notice-box no-print">
+    💡 색칠은 도안 선 아래에 칠해져서, 아무리 색칠해도 선이 가려지지 않아요.
   </div>
 
   <div class="action-area no-print">
@@ -185,6 +215,16 @@
     <button class="action-btn gray-btn" onclick="clearCanvas()">🗑️ 초기화</button>
     <button class="action-btn green-btn" onclick="downloadColoredImage()">💾 PNG 저장</button>
     <button class="action-btn" onclick="window.print()">🖨️ 프린트</button>
+  </div>
+
+  <div class="guide-box no-print">
+    <h2>사용 방법</h2>
+    <ol>
+      <li>위에서 색상을 선택하세요.</li>
+      <li>도안 위에서 마우스나 손가락으로 자유롭게 색칠하세요.</li>
+      <li>도안 선은 항상 위에 보여서 색칠해도 가려지지 않습니다.</li>
+      <li>완성하면 PNG 저장 또는 프린트로 출력해보세요.</li>
+    </ol>
   </div>
 
   <script>
@@ -289,34 +329,29 @@
 
     function draw(event) {
       if (!drawing) return;
-    
+
       const pos = getPosition(event);
-    
+
       ctx.lineWidth = brushSize;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-    
+
       if (currentColor === 'eraser') {
         ctx.globalCompositeOperation = 'destination-out';
-        ctx.globalAlpha = 1;
       } else {
         ctx.globalCompositeOperation = 'source-over';
-        ctx.globalAlpha = 0.15;
         ctx.strokeStyle = currentColor;
       }
-    
+
       ctx.lineTo(pos.x, pos.y);
       ctx.stroke();
-    
-      ctx.globalAlpha = 1;
-    
+
       event.preventDefault();
     }
 
     function stopDrawing() {
       drawing = false;
       ctx.globalCompositeOperation = 'source-over';
-      ctx.globalAlpha = 1;
     }
 
     function undo() {
@@ -345,11 +380,8 @@
       tempCanvas.width = canvas.width;
       tempCanvas.height = canvas.height;
 
+      tempCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
       tempCtx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
-      
-      tempCtx.globalAlpha = 0.45;
-      tempCtx.drawImage(canvas, 0, 0);
-      tempCtx.globalAlpha = 1;
 
       const fileName = title.replaceAll(' ', '-') + '-colored.png';
 
