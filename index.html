@@ -17,7 +17,7 @@
   </script>
   
   <title>놀자프린트 | 무료 색칠공부 도안 프린트</title>
-  <meta name="description" content="놀자프린트는 아이에게 바로 출력해 줄 수 있는 무료 색칠공부 도안, 공룡 색칠공부, 동물 색칠공부, 미로찾기, 점잇기, 한글 숫자 학습지를 제공합니다.">
+  <meta name="description" content="놀자프린트는 아이에게 바로 출력해 줄 수 있는 무료 색칠공부 도안, 공룡 색칠공부, 동물 색칠공부, 미로찾기, 덧셈 뺄셈 게임, 숫자 학습지를 제공합니다.">
 
   <style>
     body {
@@ -72,7 +72,7 @@
 
     .button {
       display: inline-block;
-      margin-top: 20px;
+      margin: 10px 6px 0;
       padding: 16px 28px;
       background: #ff8a3d;
       color: white;
@@ -80,6 +80,10 @@
       text-decoration: none;
       font-weight: bold;
       font-size: 18px;
+    }
+
+    .button.secondary {
+      background: #4CAF50;
     }
 
     .section {
@@ -166,12 +170,27 @@
       }
 
       nav a {
-        margin: 0 8px;
+        display: inline-block;
+        margin: 4px 8px;
         font-size: 14px;
+      }
+
+      .hero {
+        padding: 60px 18px 46px;
       }
 
       .hero h1 {
         font-size: 34px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .button {
+        display: block;
+        max-width: 260px;
+        margin: 12px auto 0;
       }
     }
   </style>
@@ -183,8 +202,8 @@
       <a href="coloring-dinosaur.html">공룡 색칠공부</a>
       <a href="coloring-animal.html">동물 색칠공부</a>
       <a href="maze.html">미로찾기</a>
+      <a href="math-game.html">수학 게임</a>
       <a href="#categories">카테고리</a>
-      <a href="#coming-soon">준비중</a>
     </nav>
   </header>
 
@@ -192,14 +211,15 @@
     <h1>무료 색칠공부 도안 프린트</h1>
     <p>
       아이에게 바로 출력해 줄 수 있는<br>
-      공룡 색칠공부, 동물 색칠공부, 놀이 학습지를 제공합니다.
+      공룡 색칠공부, 동물 색칠공부, 미로찾기, 숫자 학습 게임을 제공합니다.
     </p>
     <a class="button" href="coloring-dinosaur.html">🦖 공룡 색칠공부 보러가기</a>
+    <a class="button secondary" href="math-game.html">🔢 덧셈 뺄셈 게임하기</a>
   </section>
 
   <section class="section" id="categories">
     <h2>인기 프린트 자료</h2>
-    <p class="section-subtitle">현재 공룡 색칠공부 10종을 무료로 제공합니다.</p>
+    <p class="section-subtitle">색칠공부, 미로찾기, 숫자 학습을 무료로 이용할 수 있습니다.</p>
 
     <div class="cards">
       <div class="card" onclick="location.href='coloring-dinosaur.html'">
@@ -216,18 +236,32 @@
         <span class="badge">신규</span>
       </div>
 
-      <div class="card" onclick="location.href='#coming-soon'">
-        <div class="emoji">🚗</div>
-        <h3>자동차 색칠공부</h3>
-        <p>경찰차, 소방차, 트럭, 굴착기 등 탈것 도안 준비중</p>
-        <span class="badge">준비중</span>
-      </div>
-
       <div class="card" onclick="location.href='maze.html'">
         <div class="emoji">🧩</div>
         <h3>미로찾기 게임</h3>
         <p>온라인에서 바로 플레이하고 프린트도 할 수 있는 단계별 미로찾기</p>
         <span class="badge">바로 이용 가능</span>
+      </div>
+
+      <div class="card" onclick="location.href='math-game.html'">
+        <div class="emoji">🔢</div>
+        <h3>덧셈 뺄셈 게임</h3>
+        <p>레벨을 선택하고 별을 모으며 덧셈과 뺄셈을 반복 학습해요</p>
+        <span class="badge">신규</span>
+      </div>
+
+      <div class="card" onclick="location.href='math-plus-minus.html'">
+        <div class="emoji">✏️</div>
+        <h3>덧셈 뺄셈 문제지</h3>
+        <p>10문제씩 랜덤으로 풀고 프린트할 수 있는 숫자 학습지</p>
+        <span class="badge">프린트 가능</span>
+      </div>
+
+      <div class="card" onclick="location.href='#coming-soon'">
+        <div class="emoji">🚗</div>
+        <h3>자동차 색칠공부</h3>
+        <p>경찰차, 소방차, 트럭, 굴착기 등 탈것 도안 준비중</p>
+        <span class="badge">준비중</span>
       </div>
     </div>
   </section>
@@ -238,6 +272,18 @@
 
     <div class="cards">
       <div class="card">
+        <div class="emoji">✖️</div>
+        <h3>구구단 게임</h3>
+        <p>2단부터 9단까지 게임처럼 반복 학습할 수 있는 페이지를 준비할 예정입니다.</p>
+      </div>
+
+      <div class="card">
+        <div class="emoji">🕒</div>
+        <h3>시계 읽기</h3>
+        <p>몇 시, 몇 시 30분부터 차근차근 연습하는 시계 학습 페이지입니다.</p>
+      </div>
+
+      <div class="card">
         <div class="emoji">🦄</div>
         <h3>유니콘 색칠공부</h3>
         <p>아이들이 좋아하는 귀여운 유니콘 도안을 준비할 예정입니다.</p>
@@ -247,18 +293,6 @@
         <div class="emoji">👸</div>
         <h3>공주 색칠공부</h3>
         <p>드레스, 왕관, 성 배경이 있는 색칠 도안을 준비할 예정입니다.</p>
-      </div>
-
-      <div class="card">
-        <div class="emoji">🔢</div>
-        <h3>점잇기</h3>
-        <p>숫자를 순서대로 연결하며 그림을 완성하는 활동지입니다.</p>
-      </div>
-
-      <div class="card">
-        <div class="emoji">✏️</div>
-        <h3>한글·숫자 학습</h3>
-        <p>유아와 초등 저학년을 위한 기초 학습 프린트입니다.</p>
       </div>
     </div>
   </section>
