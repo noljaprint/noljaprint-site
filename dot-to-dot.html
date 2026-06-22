@@ -614,39 +614,50 @@
       ctx.restore();
     }
 
+    function drawSinglePoint(index) {
+      const points = currentPicture.points;
+      const x = points[index][0];
+      const y = points[index][1];
+    
+      ctx.save();
+    
+      if (index < currentPointIndex) {
+        ctx.fillStyle = currentPicture.color;
+        ctx.strokeStyle = '#ffffff';
+      } else if (index === currentPointIndex) {
+        ctx.fillStyle = '#ff7a1a';
+        ctx.strokeStyle = '#ffffff';
+      } else {
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#ffb36b';
+      }
+    
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(x, y, 20, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    
+      ctx.fillStyle = index < currentPointIndex ? '#ffffff' : '#333333';
+      ctx.font = 'bold 17px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(String(index + 1), x, y);
+    
+      ctx.restore();
+    }
+    
     function drawPoints() {
       const points = currentPicture.points;
-
+    
       for (let i = 0; i < points.length; i++) {
-        const x = points[i][0];
-        const y = points[i][1];
-
-        ctx.save();
-
-        if (i < currentPointIndex) {
-          ctx.fillStyle = currentPicture.color;
-          ctx.strokeStyle = '#ffffff';
-        } else if (i === currentPointIndex) {
-          ctx.fillStyle = '#ff7a1a';
-          ctx.strokeStyle = '#ffffff';
-        } else {
-          ctx.fillStyle = '#ffffff';
-          ctx.strokeStyle = '#ffb36b';
+        if (i !== currentPointIndex) {
+          drawSinglePoint(i);
         }
-
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.arc(x, y, 24, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.fillStyle = i < currentPointIndex ? '#ffffff' : '#333333';
-        ctx.font = 'bold 22px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(String(i + 1), x, y);
-
-        ctx.restore();
+      }
+    
+      if (!isFinished && currentPointIndex < points.length) {
+        drawSinglePoint(currentPointIndex);
       }
     }
 
