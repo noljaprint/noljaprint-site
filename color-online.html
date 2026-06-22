@@ -78,37 +78,31 @@
       overflow: hidden;
       background: white;
       box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      touch-action: none;
     }
 
-    #baseImage {
-      display: block;
-      width: 100%;
-      position: relative;
-      z-index: 2;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    #drawCanvas {
+    #colorCanvas,
+    #outlineCanvas {
       position: absolute;
       left: 0;
       top: 0;
       width: 100%;
-      z-index: 1;
-      touch-action: none;
-      cursor: crosshair;
+      height: 100%;
     }
 
-    .notice-box {
-      background: #fff8e1;
-      border: 1px solid #ffd56b;
-      border-radius: 12px;
-      padding: 14px 18px;
-      margin: 20px auto;
-      max-width: 850px;
-      text-align: center;
-      color: #333;
-      box-sizing: border-box;
+    #colorCanvas {
+      z-index: 1;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    #outlineCanvas {
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    #baseImage {
+      display: none;
     }
 
     .action-area {
@@ -201,12 +195,9 @@
   </div>
 
   <div class="canvas-wrap" id="canvasWrap">
-    <canvas id="drawCanvas"></canvas>
+    <canvas id="colorCanvas"></canvas>
+    <canvas id="outlineCanvas"></canvas>
     <img id="baseImage" src="" alt="온라인 색칠 도안">
-  </div>
-
-  <div class="notice-box no-print">
-    💡 색칠은 도안 선 아래에 칠해져서, 아무리 색칠해도 선이 가려지지 않아요.
   </div>
 
   <div class="action-area no-print">
@@ -220,8 +211,8 @@
   <div class="guide-box no-print">
     <h2>사용 방법</h2>
     <ol>
-      <li>위에서 색상을 선택하세요.</li>
-      <li>도안 위에서 마우스나 손가락으로 자유롭게 색칠하세요.</li>
+      <li>색상을 선택하세요.</li>
+      <li>도안 위에서 마우스나 손가락으로 색칠하세요.</li>
       <li>도안 선은 항상 위에 보여서 색칠해도 가려지지 않습니다.</li>
       <li>완성하면 PNG 저장 또는 프린트로 출력해보세요.</li>
     </ol>
@@ -232,9 +223,13 @@
     const imageFile = params.get('img');
     const title = params.get('title') || '온라인 색칠하기';
 
-    const canvas = document.getElementById('drawCanvas');
+    const colorCanvas = document.getElementById('colorCanvas');
+    const outlineCanvas = document.getElementById('outlineCanvas');
     const baseImage = document.getElementById('baseImage');
-    const ctx = canvas.getContext('2d');
+    const canvasWrap = document.getElementById('canvasWrap');
+
+    const colorCtx = colorCanvas.getContext('2d');
+    const outlineCtx = outlineCanvas.getContext('2d');
 
     let drawing = false;
     let currentColor = '#4CAF50';
@@ -249,27 +244,69 @@
       document.getElementById('pageTitle').innerText = '도안 이미지를 찾을 수 없습니다';
     }
 
-    function resizeCanvas() {
-      const rect = baseImage.getBoundingClientRect();
+    function setupCanvasSize() {
+      const imageWidth = baseImage.naturalWidth;
+      const imageHeight = baseImage.naturalHeight;
+      const ratio = imageHeight / imageWidth;
 
-      const oldImage = new Image();
-      oldImage.src = canvas.toDataURL();
+      canvasWrap.style.height = canvasWrap.clientWidth * ratio + 'px';
 
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-      canvas.style.height = rect.height + 'px';
+      colorCanvas.width = imageWidth;
+      colorCanvas.height = imageHeight;
 
-      oldImage.onload = function () {
-        ctx.drawImage(oldImage, 0, 0, canvas.width, canvas.height);
-      };
+      outlineCanvas.width = imageWidth;
+      outlineCanvas.height = imageHeight;
+    }
+
+    function drawOutlineLayer() {
+      outlineCtx.clearRect(0, 0, outlineCanvas.width, outlineCanvas.height);
+
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+
+      tempCanvas.width = outlineCanvas.width;
+      tempCanvas.height = outlineCanvas.height;
+
+      tempCtx.drawImage(baseImage, 0, 0, tempCanvas.width, tempCanvas.height);
+
+      const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+      const data = imageData.data;
+
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+
+        const brightness = (r + g + b) / 3;
+
+        if (brightness < 235) {
+          data[i] = 0;
+          data[i + 1] = 0;
+          data[i + 2] = 0;
+          data[i + 3] = 255;
+        } else {
+          data[i + 3] = 0;
+        }
+      }
+
+      outlineCtx.putImageData(imageData, 0, 0);
     }
 
     baseImage.onload = function () {
-      resizeCanvas();
+      setupCanvasSize();
+      drawOutlineLayer();
       saveHistory();
     };
 
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', function () {
+      if (!baseImage.naturalWidth) return;
+
+      const imageWidth = baseImage.naturalWidth;
+      const imageHeight = baseImage.naturalHeight;
+      const ratio = imageHeight / imageWidth;
+
+      canvasWrap.style.height = canvasWrap.clientWidth * ratio + 'px';
+    });
 
     function setColor(color, button) {
       currentColor = color;
@@ -283,6 +320,7 @@
 
     function setEraser() {
       currentColor = 'eraser';
+
       document.querySelectorAll('.color-btn').forEach(btn => {
         btn.classList.remove('active');
       });
@@ -294,18 +332,22 @@
     }
 
     function getPosition(event) {
-      const rect = canvas.getBoundingClientRect();
+      const rect = colorCanvas.getBoundingClientRect();
+
+      let clientX;
+      let clientY;
 
       if (event.touches && event.touches.length > 0) {
-        return {
-          x: event.touches[0].clientX - rect.left,
-          y: event.touches[0].clientY - rect.top
-        };
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+      } else {
+        clientX = event.clientX;
+        clientY = event.clientY;
       }
 
       return {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top
+        x: (clientX - rect.left) * (colorCanvas.width / rect.width),
+        y: (clientY - rect.top) * (colorCanvas.height / rect.height)
       };
     }
 
@@ -314,16 +356,19 @@
         historyStack.shift();
       }
 
-      historyStack.push(canvas.toDataURL());
+      historyStack.push(colorCanvas.toDataURL());
     }
 
     function startDrawing(event) {
       saveHistory();
 
       drawing = true;
+
       const pos = getPosition(event);
-      ctx.beginPath();
-      ctx.moveTo(pos.x, pos.y);
+
+      colorCtx.beginPath();
+      colorCtx.moveTo(pos.x, pos.y);
+
       event.preventDefault();
     }
 
@@ -332,26 +377,31 @@
 
       const pos = getPosition(event);
 
-      ctx.lineWidth = brushSize;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
+      colorCtx.lineWidth = brushSize * (colorCanvas.width / colorCanvas.getBoundingClientRect().width);
+      colorCtx.lineCap = 'round';
+      colorCtx.lineJoin = 'round';
 
       if (currentColor === 'eraser') {
-        ctx.globalCompositeOperation = 'destination-out';
+        colorCtx.globalCompositeOperation = 'destination-out';
+        colorCtx.globalAlpha = 1;
       } else {
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = currentColor;
+        colorCtx.globalCompositeOperation = 'source-over';
+        colorCtx.globalAlpha = 0.55;
+        colorCtx.strokeStyle = currentColor;
       }
 
-      ctx.lineTo(pos.x, pos.y);
-      ctx.stroke();
+      colorCtx.lineTo(pos.x, pos.y);
+      colorCtx.stroke();
+
+      colorCtx.globalAlpha = 1;
 
       event.preventDefault();
     }
 
     function stopDrawing() {
       drawing = false;
-      ctx.globalCompositeOperation = 'source-over';
+      colorCtx.globalCompositeOperation = 'source-over';
+      colorCtx.globalAlpha = 1;
     }
 
     function undo() {
@@ -361,8 +411,8 @@
       const img = new Image();
 
       img.onload = function () {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        colorCtx.clearRect(0, 0, colorCanvas.width, colorCanvas.height);
+        colorCtx.drawImage(img, 0, 0, colorCanvas.width, colorCanvas.height);
       };
 
       img.src = previous;
@@ -370,18 +420,21 @@
 
     function clearCanvas() {
       saveHistory();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      colorCtx.clearRect(0, 0, colorCanvas.width, colorCanvas.height);
     }
 
     function downloadColoredImage() {
       const tempCanvas = document.createElement('canvas');
       const tempCtx = tempCanvas.getContext('2d');
 
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
+      tempCanvas.width = colorCanvas.width;
+      tempCanvas.height = colorCanvas.height;
 
-      tempCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
-      tempCtx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+      tempCtx.fillStyle = '#ffffff';
+      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+      tempCtx.drawImage(colorCanvas, 0, 0);
+      tempCtx.drawImage(outlineCanvas, 0, 0);
 
       const fileName = title.replaceAll(' ', '-') + '-colored.png';
 
@@ -391,14 +444,14 @@
       link.click();
     }
 
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseleave', stopDrawing);
+    colorCanvas.addEventListener('mousedown', startDrawing);
+    colorCanvas.addEventListener('mousemove', draw);
+    colorCanvas.addEventListener('mouseup', stopDrawing);
+    colorCanvas.addEventListener('mouseleave', stopDrawing);
 
-    canvas.addEventListener('touchstart', startDrawing);
-    canvas.addEventListener('touchmove', draw);
-    canvas.addEventListener('touchend', stopDrawing);
+    colorCanvas.addEventListener('touchstart', startDrawing, { passive: false });
+    colorCanvas.addEventListener('touchmove', draw, { passive: false });
+    colorCanvas.addEventListener('touchend', stopDrawing);
   </script>
 
 </body>
