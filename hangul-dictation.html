@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>한글 받아쓰기 게임 | 놀자프린트</title>
+  <meta name="description" content="아이들이 한글 단어와 문장을 듣고 입력하며 받아쓰기를 연습할 수 있는 무료 한글 받아쓰기 게임입니다. 단어, 받침, 맞춤법, 짧은 문장, 초등 문장까지 단계별로 연습할 수 있습니다.">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H37MBB00BG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-H37MBB00BG');
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 18px 16px 50px;
+      background: #fffaf0;
+      color: #333;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    a {
+      color: #ff7a1a;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    h1, h2 {
+      color: #ff7a1a;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 18px 0 8px;
+    }
+
+    .intro {
+      text-align: center;
+      color: #555;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .top-box,
+    .game-card,
+    .score-box,
+    .info-box {
+      background: #fff;
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      margin: 18px 0;
+      text-align: center;
+    }
+
+    select, button, input {
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 12px 14px;
+      box-sizing: border-box;
+    }
+
+    select {
+      width: 100%;
+      max-width: 420px;
+      border: 2px solid #ff7a1a;
+      background: white;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    button {
+      border: none;
+      background: #ff7a1a;
+      color: white;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .small-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .listen-btn {
+      font-size: 24px;
+      padding: 16px 26px;
+      border-radius: 999px;
+      background: #4CAF50;
+      margin: 12px 0;
+    }
+
+    .hint-btn {
+      background: #2196F3;
+    }
+
+    .new-btn {
+      background: #ff7a1a;
+    }
+
+    .check-btn {
+      background: #4CAF50;
+      width: 100%;
+      max-width: 420px;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    .status-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .status-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 8px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      font-weight: bold;
+    }
+
+    .status-label {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    .status-value {
+      font-size: 22px;
+      color: #ff7a1a;
+    }
+
+    .question-title {
+      font-size: 22px;
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .input-box {
+      width: 100%;
+      max-width: 520px;
+      border: 3px solid #ffb36b;
+      background: #fff8e1;
+      color: #333;
+      font-size: 22px;
+      text-align: center;
+      margin: 12px auto 6px;
+      display: block;
+    }
+
+    .input-box:focus {
+      outline: none;
+      border-color: #2196F3;
+      background: #e3f2fd;
+    }
+
+    .hint-box {
+      min-height: 32px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #555;
+      margin: 10px 0;
+      line-height: 1.5;
+    }
+
+    .message {
+      min-height: 44px;
+      font-size: 23px;
+      font-weight: bold;
+      color: #4CAF50;
+      margin: 14px 0 4px;
+      line-height: 1.5;
+    }
+
+    .message.wrong {
+      color: #f44336;
+    }
+
+    .answer-box {
+      display: none;
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      background: #fff3d6;
+      font-size: 20px;
+      font-weight: bold;
+      line-height: 1.6;
+    }
+
+    .answer-label {
+      color: #777;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .answer-text {
+      color: #ff7a1a;
+      font-size: 24px;
+    }
+
+    .score-box {
+      display: none;
+    }
+
+    .score-title {
+      color: #ff7a1a;
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .stars-big {
+      font-size: 34px;
+      line-height: 1.5;
+      margin: 10px 0;
+    }
+
+    .info-box {
+      background: #fff3d6;
+      line-height: 1.7;
+      text-align: left;
+    }
+
+    .info-box strong {
+      color: #ff7a1a;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 14px 12px 40px;
+      }
+
+      .top-box,
+      .game-card,
+      .score-box,
+      .info-box {
+        padding: 14px;
+      }
+
+      .status-box {
+        gap: 8px;
+      }
+
+      .status-card {
+        padding: 10px 4px;
+      }
+
+      .status-value {
+        font-size: 19px;
+      }
+
+      .input-box {
+        font-size: 20px;
+      }
+
+      .listen-btn {
+        font-size: 22px;
+        width: 100%;
+        max-width: 320px;
+      }
+
+      .message {
+        font-size: 20px;
+      }
+    }
+
+    @media print {
+      a,
+      .top-box,
+      .status-box,
+      .small-buttons,
+      .listen-btn,
+      .check-btn,
+      .score-box,
+      .info-box {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        padding: 20px;
+      }
+
+      .game-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+
+      .input-box {
+        color: transparent;
+        background: white;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a href="index.html">← 홈으로</a>
+
+  <h1>한글 받아쓰기 게임</h1>
+  <p class="intro">
+    듣기 버튼을 누르고<br>
+    들은 단어와 문장을 입력해 보세요!
+  </p>
+
+  <div class="top-box">
+    <select id="levelSelect" onchange="startNewQuestion()">
+      <option value="1">Level 1: 쉬운 단어</option>
+      <option value="2">Level 2: 긴 단어</option>
+      <option value="3">Level 3: 받침 단어</option>
+      <option value="4">Level 4: 맞춤법 단어</option>
+      <option value="5">Level 5: 짧은 문장</option>
+      <option value="6">Level 6: 초등 문장</option>
+    </select>
+
+    <div class="small-buttons">
+      <button class="new-btn" onclick="startNewQuestion()">새 문제</button>
+      <button class="hint-btn" onclick="showHint()">힌트 보기</button>
+      <button onclick="resetScore()">점수 초기화</button>
+    </div>
+  </div>
+
+  <div class="status-box">
+    <div class="status-card">
+      <div class="status-label">문제</div>
+      <div id="questionCount" class="status-value">1</div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-label">별</div>
+      <div id="starText" class="status-value">⭐ 0</div>
+    </div>
+
+    <div class="status-card">
+      <div class="status-label">연속</div>
+      <div id="streakText" class="status-value">0</div>
+    </div>
+  </div>
+
+  <div class="game-card">
+    <div id="questionTitle" class="question-title">소리를 듣고 입력해 보세요.</div>
+
+    <button class="listen-btn" onclick="speakCurrentText()">🔊 듣기</button>
+
+    <input
+      id="answerInput"
+      class="input-box"
+      type="text"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+      placeholder="들은 내용을 입력하세요"
+      onkeydown="handleEnter(event)"
+    >
+
+    <button class="check-btn" onclick="checkAnswer()">정답 확인</button>
+
+    <div id="hintBox" class="hint-box"></div>
+    <div id="messageBox" class="message"></div>
+
+    <div id="answerBox" class="answer-box">
+      <div class="answer-label">정답</div>
+      <div id="answerText" class="answer-text"></div>
+    </div>
+  </div>
+
+  <div id="scoreBox" class="score-box">
+    <div class="score-title">오늘의 받아쓰기</div>
+    <div id="scoreStars" class="stars-big"></div>
+    <div id="scoreMessage" class="message"></div>
+  </div>
+
+  <div class="info-box">
+    <strong>학습 방법</strong>
+    <br>
+    듣기 버튼을 누르면 문제가 소리로 나옵니다. 들은 단어 또는 문장을 입력하고 정답 확인을 눌러보세요.
+    <br>
+    Level 5~6은 문장이 랜덤 조합으로 만들어져서 매번 다른 받아쓰기 문제가 나올 수 있습니다.
+  </div>
+
+  <script>
+    const dictationData = {
+      1: [
+        '사과', '나무', '바다', '학교', '가방', '하늘', '구름', '바람',
+        '친구', '엄마', '아빠', '동생', '고양이', '강아지', '토끼'
+      ],
+      2: [
+        '무지개', '놀이터', '운동장', '동물원', '생일파티', '그림책',
+        '장난감', '자전거', '비행기', '우산꽂이', '손수건', '물병'
+      ],
+      3: [
+        '꽃', '밖', '닭', '흙', '값', '몫', '삶', '앉다',
+        '읽다', '넓다', '밟다', '맑다', '없다', '많다', '괜찮다'
+      ],
+      4: [
+        '설거지', '며칠', '어떻게', '안 돼요', '돼요', '되다',
+        '왠지', '웬일', '금세', '요즘', '역할', '로서', '로써',
+        '맞히다', '맞추다', '가르치다', '가리키다'
+      ]
+    };
+
+    const sentenceParts = {
+      time: ['오늘 아침에', '어제 저녁에', '방과 후에', '주말에', '점심시간에', '비가 그친 뒤에'],
+      subject: ['나는', '동생은', '친구는', '우리 가족은', '선생님은', '민수는', '지수는'],
+      place: ['학교에서', '공원에서', '도서관에서', '운동장에서', '집에서', '놀이터에서'],
+      action: [
+        '책을 읽었어요.', '그림을 그렸어요.', '친구를 만났어요.', '숙제를 했어요.',
+        '축구를 했어요.', '맛있는 간식을 먹었어요.', '새로운 단어를 배웠어요.'
+      ],
+      reason: [
+        '비가 와서', '날씨가 좋아서', '숙제가 있어서', '감기에 걸려서',
+        '시험이 있어서', '친구 생일이라서', '바람이 많이 불어서'
+      ],
+      result: [
+        '우산을 챙겼어요.', '공원에 갔어요.', '열심히 공부했어요.',
+        '일찍 잠을 잤어요.', '편지를 썼어요.', '창문을 닫았어요.'
+      ],
+      advancedStart: [
+        '책을 읽으면', '꾸준히 연습하면', '친구의 말을 잘 들으면',
+        '새로운 것을 배울 때에는', '실수를 고치려고 노력하면', '자연을 자세히 관찰하면'
+      ],
+      advancedEnd: [
+        '생각하는 힘을 기를 수 있어요.',
+        '어려운 문제도 조금씩 해결할 수 있어요.',
+        '서로의 마음을 더 잘 이해할 수 있어요.',
+        '처음에는 어렵지만 점점 익숙해져요.',
+        '작은 변화도 발견할 수 있어요.',
+        '스스로 할 수 있다는 자신감이 생겨요.'
+      ]
+    };
+
+    let currentAnswer = '';
+    let questionNumber = 1;
+    let stars = 0;
+    let streak = 0;
+    let lastText = '';
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function pickRandom(array) {
+      return array[randomInt(0, array.length - 1)];
+    }
+
+    function normalizeText(text) {
+      return text
+        .replace(/\s+/g, ' ')
+        .replace(/[.,!?~]/g, '')
+        .trim();
+    }
+
+    function makeSentence(level) {
+      if (level === 5) {
+        const pattern = randomInt(1, 3);
+
+        if (pattern === 1) {
+          return pickRandom(sentenceParts.time) + ' ' +
+            pickRandom(sentenceParts.subject) + ' ' +
+            pickRandom(sentenceParts.place) + ' ' +
+            pickRandom(sentenceParts.action);
+        }
+
+        if (pattern === 2) {
+          return pickRandom(sentenceParts.reason) + ' ' +
+            pickRandom(sentenceParts.subject) + ' ' +
+            pickRandom(sentenceParts.result);
+        }
+
+        return pickRandom(sentenceParts.subject) + ' ' +
+          pickRandom(sentenceParts.place) + ' ' +
+          pickRandom(sentenceParts.action);
+      }
+
+      const pattern = randomInt(1, 2);
+
+      if (pattern === 1) {
+        return pickRandom(sentenceParts.advancedStart) + ' ' +
+          pickRandom(sentenceParts.advancedEnd);
+      }
+
+      return pickRandom(sentenceParts.time) + ' ' +
+        pickRandom(sentenceParts.subject) + ' ' +
+        pickRandom(sentenceParts.place) + ' ' +
+        pickRandom(sentenceParts.action);
+    }
+
+    function makeQuestion() {
+      const level = Number(document.getElementById('levelSelect').value);
+
+      if (level <= 4) {
+        let text = pickRandom(dictationData[level]);
+
+        if (text === lastText) {
+          text = pickRandom(dictationData[level]);
+        }
+
+        lastText = text;
+        return text;
+      }
+
+      let sentence = makeSentence(level);
+
+      if (sentence === lastText) {
+        sentence = makeSentence(level);
+      }
+
+      lastText = sentence;
+      return sentence;
+    }
+
+    function startNewQuestion() {
+      currentAnswer = makeQuestion();
+
+      document.getElementById('answerInput').value = '';
+      document.getElementById('hintBox').innerText = '';
+      document.getElementById('messageBox').innerText = '';
+      document.getElementById('messageBox').className = 'message';
+      document.getElementById('answerBox').style.display = 'none';
+      document.getElementById('answerText').innerText = '';
+
+      const level = Number(document.getElementById('levelSelect').value);
+
+      if (level <= 4) {
+        document.getElementById('questionTitle').innerText = '단어를 듣고 입력해 보세요.';
+      } else {
+        document.getElementById('questionTitle').innerText = '문장을 듣고 입력해 보세요.';
+      }
+
+      updateStatus();
+      document.getElementById('answerInput').focus();
+    }
+
+    function speakCurrentText() {
+      if (!currentAnswer) return;
+
+      if (!('speechSynthesis' in window)) {
+        document.getElementById('messageBox').innerText = '이 브라우저에서는 듣기 기능이 지원되지 않아요.';
+        document.getElementById('messageBox').className = 'message wrong';
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(currentAnswer);
+      utterance.lang = 'ko-KR';
+      utterance.rate = 0.82;
+      utterance.pitch = 1.0;
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function showHint() {
+      if (!currentAnswer) return;
+
+      const clean = normalizeText(currentAnswer);
+      const firstChar = clean.charAt(0);
+      const length = clean.replace(/\s/g, '').length;
+
+      document.getElementById('hintBox').innerText =
+        '힌트: 첫 글자는 "' + firstChar + '", 글자 수는 ' + length + '글자예요.';
+    }
+
+    function checkAnswer() {
+      const userAnswer = document.getElementById('answerInput').value;
+      const messageBox = document.getElementById('messageBox');
+
+      if (userAnswer.trim() === '') {
+        messageBox.innerText = '들은 내용을 입력해 주세요!';
+        messageBox.className = 'message wrong';
+        return;
+      }
+
+      const normalizedUser = normalizeText(userAnswer);
+      const normalizedAnswer = normalizeText(currentAnswer);
+
+      if (normalizedUser === normalizedAnswer) {
+        stars++;
+        streak++;
+        questionNumber++;
+
+        messageBox.innerText = '🎉 정답!  ⭐ +1';
+        messageBox.className = 'message';
+
+        updateStatus();
+        updateScoreBox();
+
+        setTimeout(function() {
+          startNewQuestion();
+        }, 750);
+      } else {
+        streak = 0;
+        messageBox.innerText = '😅 조금 달라요. 다시 들어볼까요?';
+        messageBox.className = 'message wrong';
+
+        document.getElementById('answerBox').style.display = 'block';
+        document.getElementById('answerText').innerText = currentAnswer;
+
+        updateStatus();
+      }
+    }
+
+    function resetScore() {
+      questionNumber = 1;
+      stars = 0;
+      streak = 0;
+      updateStatus();
+      updateScoreBox();
+
+      document.getElementById('messageBox').innerText = '점수를 다시 시작했어요!';
+      document.getElementById('messageBox').className = 'message';
+    }
+
+    function updateStatus() {
+      document.getElementById('questionCount').innerText = questionNumber;
+      document.getElementById('starText').innerText = '⭐ ' + stars;
+      document.getElementById('streakText').innerText = streak;
+    }
+
+    function updateScoreBox() {
+      const scoreBox = document.getElementById('scoreBox');
+      scoreBox.style.display = stars > 0 ? 'block' : 'none';
+
+      let starString = '';
+
+      for (let i = 0; i < stars; i++) {
+        starString += '⭐';
+      }
+
+      document.getElementById('scoreStars').innerText = starString;
+
+      if (stars >= 10) {
+        document.getElementById('scoreMessage').innerText = '10개 이상 정답! 받아쓰기 실력이 정말 좋아요!';
+      } else if (stars >= 5) {
+        document.getElementById('scoreMessage').innerText = stars + '개 정답! 아주 잘하고 있어요!';
+      } else {
+        document.getElementById('scoreMessage').innerText = stars + '개 정답! 계속 도전해봐요!';
+      }
+    }
+
+    function handleEnter(event) {
+      if (event.key === 'Enter') {
+        checkAnswer();
+      }
+    }
+
+    startNewQuestion();
+  </script>
+
+</body>
+</html>
