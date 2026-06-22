@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>한글 따라쓰기 | 놀자프린트</title>
+  <meta name="description" content="자음, 모음, 가나다, 쉬운 단어를 프린트해서 따라 쓸 수 있는 무료 한글 따라쓰기 학습지입니다. 처음에는 진한 회색 글자를 따라 쓰고 점점 스스로 써볼 수 있습니다.">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-H37MBB00BG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-H37MBB00BG');
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 18px 16px 50px;
+      background: #fffaf0;
+      color: #333;
+    }
+
+    a {
+      color: #ff7a1a;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    h1, h2 {
+      color: #ff7a1a;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 18px 0 8px;
+    }
+
+    .intro {
+      text-align: center;
+      color: #555;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .top-box,
+    .preview-box,
+    .worksheet-box,
+    .info-box {
+      background: #fff;
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      margin: 18px 0;
+      text-align: center;
+    }
+
+    select, button {
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 12px 14px;
+      box-sizing: border-box;
+    }
+
+    select {
+      width: 100%;
+      max-width: 420px;
+      border: 2px solid #ff7a1a;
+      background: white;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    button {
+      border: none;
+      background: #ff7a1a;
+      color: white;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .small-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .category-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .category-buttons button.active {
+      background: #4CAF50;
+    }
+
+    .letter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .letter-btn {
+      background: #fff8e1;
+      border: 3px solid #ffb36b;
+      color: #333;
+      min-height: 58px;
+      font-size: 25px;
+      border-radius: 14px;
+    }
+
+    .letter-btn.active {
+      background: #e3f2fd;
+      border-color: #2196F3;
+      color: #2196F3;
+    }
+
+    .preview-letter {
+      font-size: 86px;
+      font-weight: bold;
+      color: #ff7a1a;
+      line-height: 1.2;
+    }
+
+    .preview-desc {
+      font-size: 18px;
+      font-weight: bold;
+      color: #555;
+      margin-top: 8px;
+    }
+
+    .worksheet-title {
+      font-size: 26px;
+      font-weight: bold;
+      color: #ff7a1a;
+      margin-bottom: 14px;
+    }
+
+    .trace-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .trace-cell {
+      height: 96px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      background: white;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .trace-cell::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 1px;
+      height: 100%;
+      border-left: 1px dashed #ddd;
+    }
+
+    .trace-cell::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100%;
+      height: 1px;
+      border-top: 1px dashed #ddd;
+    }
+
+    .trace-text {
+      position: relative;
+      z-index: 1;
+      font-size: 58px;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .shade-1 {
+      color: rgba(0,0,0,0.34);
+    }
+
+    .shade-2 {
+      color: rgba(0,0,0,0.24);
+    }
+
+    .shade-3 {
+      color: rgba(0,0,0,0.14);
+    }
+
+    .shade-4 {
+      color: rgba(0,0,0,0.07);
+    }
+
+    .blank {
+      color: transparent;
+    }
+
+    .word-cell .trace-text {
+      font-size: 38px;
+    }
+
+    .info-box {
+      background: #fff3d6;
+      line-height: 1.7;
+      text-align: left;
+    }
+
+    .info-box strong {
+      color: #ff7a1a;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 14px 12px 40px;
+      }
+
+      .top-box,
+      .preview-box,
+      .worksheet-box,
+      .info-box {
+        padding: 14px;
+      }
+
+      .category-buttons {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .trace-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .trace-cell {
+        height: 82px;
+      }
+
+      .trace-text {
+        font-size: 48px;
+      }
+
+      .word-cell .trace-text {
+        font-size: 30px;
+      }
+    }
+
+    @media print {
+      a,
+      .top-box,
+      .preview-box,
+      .info-box,
+      .small-buttons {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        padding: 10px;
+        max-width: none;
+      }
+
+      h1 {
+        display: none;
+      }
+
+      .worksheet-box {
+        box-shadow: none;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+      }
+
+      .trace-cell {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a href="index.html">← 홈으로</a>
+
+  <h1>한글 따라쓰기</h1>
+  <p class="intro">
+    글자를 선택하고 프린트해서<br>
+    진한 회색 글자부터 천천히 따라 써보세요!
+  </p>
+
+  <div class="top-box">
+    <div class="category-buttons">
+      <button id="consonantBtn" class="active" onclick="changeCategory('consonant')">자음</button>
+      <button id="vowelBtn" onclick="changeCategory('vowel')">모음</button>
+      <button id="syllableBtn" onclick="changeCategory('syllable')">가나다</button>
+      <button id="wordBtn" onclick="changeCategory('word')">단어</button>
+    </div>
+
+    <select id="itemSelect" onchange="selectItem(this.value)"></select>
+
+    <div class="small-buttons">
+      <button onclick="window.print()">프린트</button>
+      <button onclick="location.href='hangul-learning.html'">한글 공부</button>
+      <button onclick="location.href='hangul-dictation.html'">받아쓰기</button>
+    </div>
+
+    <div id="letterGrid" class="letter-grid"></div>
+  </div>
+
+  <div class="preview-box">
+    <div id="previewLetter" class="preview-letter">ㄱ</div>
+    <div id="previewDesc" class="preview-desc">기역 따라쓰기</div>
+  </div>
+
+  <div class="worksheet-box">
+    <div id="worksheetTitle" class="worksheet-title">ㄱ 따라쓰기</div>
+    <div id="worksheet"></div>
+  </div>
+
+  <div class="info-box">
+    <strong>학습 방법</strong>
+    <br>
+    첫 줄은 진한 회색 글자를 따라 쓰고, 다음 줄로 갈수록 글자가 점점 흐려집니다.
+    마지막 줄은 빈칸이므로 아이가 스스로 써볼 수 있습니다.
+    <br>
+    프린트 버튼을 누르면 한글 따라쓰기 학습지로 사용할 수 있습니다.
+  </div>
+
+  <script>
+    const tracingData = {
+      consonant: [
+        { text: 'ㄱ', label: '기역' },
+        { text: 'ㄴ', label: '니은' },
+        { text: 'ㄷ', label: '디귿' },
+        { text: 'ㄹ', label: '리을' },
+        { text: 'ㅁ', label: '미음' },
+        { text: 'ㅂ', label: '비읍' },
+        { text: 'ㅅ', label: '시옷' },
+        { text: 'ㅇ', label: '이응' },
+        { text: 'ㅈ', label: '지읒' },
+        { text: 'ㅊ', label: '치읓' },
+        { text: 'ㅋ', label: '키읔' },
+        { text: 'ㅌ', label: '티읕' },
+        { text: 'ㅍ', label: '피읖' },
+        { text: 'ㅎ', label: '히읗' }
+      ],
+      vowel: [
+        { text: 'ㅏ', label: '아' },
+        { text: 'ㅑ', label: '야' },
+        { text: 'ㅓ', label: '어' },
+        { text: 'ㅕ', label: '여' },
+        { text: 'ㅗ', label: '오' },
+        { text: 'ㅛ', label: '요' },
+        { text: 'ㅜ', label: '우' },
+        { text: 'ㅠ', label: '유' },
+        { text: 'ㅡ', label: '으' },
+        { text: 'ㅣ', label: '이' }
+      ],
+      syllable: [
+        { text: '가', label: '가' },
+        { text: '나', label: '나' },
+        { text: '다', label: '다' },
+        { text: '라', label: '라' },
+        { text: '마', label: '마' },
+        { text: '바', label: '바' },
+        { text: '사', label: '사' },
+        { text: '아', label: '아' },
+        { text: '자', label: '자' },
+        { text: '차', label: '차' },
+        { text: '카', label: '카' },
+        { text: '타', label: '타' },
+        { text: '파', label: '파' },
+        { text: '하', label: '하' }
+      ],
+      word: [
+        { text: '사과', label: '사과' },
+        { text: '나무', label: '나무' },
+        { text: '바다', label: '바다' },
+        { text: '학교', label: '학교' },
+        { text: '가방', label: '가방' },
+        { text: '하늘', label: '하늘' },
+        { text: '친구', label: '친구' },
+        { text: '고양이', label: '고양이' },
+        { text: '강아지', label: '강아지' },
+        { text: '무지개', label: '무지개' }
+      ]
+    };
+
+    let currentCategory = 'consonant';
+    let currentItem = tracingData.consonant[0];
+
+    function changeCategory(category) {
+      currentCategory = category;
+
+      document.getElementById('consonantBtn').classList.remove('active');
+      document.getElementById('vowelBtn').classList.remove('active');
+      document.getElementById('syllableBtn').classList.remove('active');
+      document.getElementById('wordBtn').classList.remove('active');
+
+      document.getElementById(category + 'Btn').classList.add('active');
+
+      buildSelect();
+      buildLetterGrid();
+
+      selectItem(tracingData[category][0].text);
+    }
+
+    function buildSelect() {
+      const select = document.getElementById('itemSelect');
+      const list = tracingData[currentCategory];
+
+      select.innerHTML = '';
+
+      list.forEach(function(item) {
+        const option = document.createElement('option');
+        option.value = item.text;
+        option.innerText = item.label;
+        select.appendChild(option);
+      });
+    }
+
+    function buildLetterGrid() {
+      const grid = document.getElementById('letterGrid');
+      const list = tracingData[currentCategory];
+
+      grid.innerHTML = '';
+
+      list.forEach(function(item) {
+        const button = document.createElement('button');
+        button.className = 'letter-btn';
+        button.innerText = item.text;
+        button.onclick = function() {
+          selectItem(item.text);
+        };
+
+        grid.appendChild(button);
+      });
+    }
+
+    function selectItem(text) {
+      const list = tracingData[currentCategory];
+
+      currentItem = list.find(function(item) {
+        return item.text === text;
+      }) || list[0];
+
+      document.getElementById('itemSelect').value = currentItem.text;
+      updateActiveLetterButton();
+      renderPreview();
+      renderWorksheet();
+    }
+
+    function updateActiveLetterButton() {
+      const buttons = document.querySelectorAll('.letter-btn');
+
+      buttons.forEach(function(button) {
+        button.classList.remove('active');
+
+        if (button.innerText === currentItem.text) {
+          button.classList.add('active');
+        }
+      });
+    }
+
+    function renderPreview() {
+      document.getElementById('previewLetter').innerText = currentItem.text;
+      document.getElementById('previewDesc').innerText = currentItem.label + ' 따라쓰기';
+      document.getElementById('worksheetTitle').innerText = currentItem.text + ' 따라쓰기';
+    }
+
+    function renderWorksheet() {
+      const worksheet = document.getElementById('worksheet');
+      const text = currentItem.text;
+      const isWord = currentCategory === 'word';
+      const shades = ['shade-1', 'shade-2', 'shade-3', 'shade-4', 'blank', 'blank'];
+
+      worksheet.innerHTML = '';
+
+      shades.forEach(function(shadeClass) {
+        const row = document.createElement('div');
+        row.className = 'trace-row';
+
+        for (let i = 0; i < 5; i++) {
+          const cell = document.createElement('div');
+          cell.className = 'trace-cell';
+
+          if (isWord) {
+            cell.classList.add('word-cell');
+          }
+
+          const span = document.createElement('span');
+          span.className = 'trace-text ' + shadeClass;
+          span.innerText = text;
+
+          cell.appendChild(span);
+          row.appendChild(cell);
+        }
+
+        worksheet.appendChild(row);
+      });
+    }
+
+    changeCategory('consonant');
+  </script>
+
+</body>
+</html>
