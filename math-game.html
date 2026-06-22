@@ -168,6 +168,21 @@
       color: #f44336;
     }
 
+    .record-box {
+      background: #fff3d6;
+      border-radius: 16px;
+      padding: 14px;
+      margin: 16px 0;
+      font-size: 18px;
+      font-weight: bold;
+      color: #555;
+    }
+    
+    .next-level-btn {
+      background: #4CAF50;
+      margin-top: 10px;
+    }
+
     .finish-box {
       display: none;
       background: #fff;
@@ -333,7 +348,11 @@
     <div class="finish-title">완료!</div>
     <div id="finishStars" class="stars-big"></div>
     <div id="finishMessage" class="finish-message"></div>
+    
+    <div id="recordBox" class="record-box"></div>
+    
     <button onclick="startGame()">같은 레벨 다시 하기</button>
+    <button class="next-level-btn" onclick="startNextLevel()">다음 레벨 도전하기</button>
   </div>
 
   <div class="info-box">
@@ -368,6 +387,7 @@
     let currentAnswer = '';
     let stars = 0;
     let streak = 0;
+    let bestStreak = 0;
     let isWaiting = false;
 
     function randomInt(min, max) {
@@ -544,6 +564,10 @@
       if (Number(currentAnswer) === q.answer) {
         stars++;
         streak++;
+        
+        if (streak > bestStreak) {
+          bestStreak = streak;
+        }
 
         if (streak >= 10) {
           messageBox.innerText = '🔥 10연속 정답! 최고예요!';
@@ -552,7 +576,7 @@
         } else if (streak >= 3) {
           messageBox.innerText = '🔥 3연속 정답!';
         } else {
-          messageBox.innerText = '🎉 정답!';
+          messageBox.innerText = '🎉 정답!  ⭐ +1';
         }
 
         messageBox.className = 'message';
@@ -597,18 +621,36 @@
     function finishGame() {
       document.getElementById('gameCard').style.display = 'none';
       document.getElementById('finishBox').style.display = 'block';
-
+    
+      const level = Number(document.getElementById('levelSelect').value);
+      const bestScoreKey = 'mathGameBestScoreLevel' + level;
+      const bestStreakKey = 'mathGameBestStreakLevel' + level;
+    
+      const savedBestScore = Number(localStorage.getItem(bestScoreKey) || 0);
+      const savedBestStreak = Number(localStorage.getItem(bestStreakKey) || 0);
+    
+      if (stars > savedBestScore) {
+        localStorage.setItem(bestScoreKey, stars);
+      }
+    
+      if (bestStreak > savedBestStreak) {
+        localStorage.setItem(bestStreakKey, bestStreak);
+      }
+    
+      const finalBestScore = Math.max(stars, savedBestScore);
+      const finalBestStreak = Math.max(bestStreak, savedBestStreak);
+    
       document.getElementById('progressText').innerText = '10 / 10';
       document.getElementById('starText').innerText = '⭐ ' + stars;
-      document.getElementById('streakText').innerText = streak;
-
+      document.getElementById('streakText').innerText = bestStreak;
+    
       let starString = '';
       for (let i = 0; i < stars; i++) {
         starString += '⭐';
       }
-
-      document.getElementById('finishStars').innerText = starString;
-
+    
+      document.getElementById('finishStars').innerText = starString || '⭐ 0';
+    
       if (stars === 10) {
         document.getElementById('finishMessage').innerText = '10개 모두 정답! 정말 잘했어요!';
       } else if (stars >= 8) {
@@ -618,9 +660,25 @@
       } else {
         document.getElementById('finishMessage').innerText = stars + '개 정답! 다시 한번 해봐요!';
       }
+    
+      document.getElementById('recordBox').innerHTML =
+        '오늘 별: ⭐ ' + stars + '<br>' +
+        '오늘 최고 연속: 🔥 ' + bestStreak + '<br>' +
+        '이 레벨 최고 기록: ⭐ ' + finalBestScore + '<br>' +
+        '이 레벨 최고 연속: 🔥 ' + finalBestStreak;
     }
 
-    startGame();
+    function startNextLevel() {
+      const levelSelect = document.getElementById('levelSelect');
+      const currentLevel = Number(levelSelect.value);
+    
+      if (currentLevel < 5) {
+        levelSelect.value = String(currentLevel + 1);
+        startGame();
+      } else {
+        startGame();
+      }
+    }
   </script>
 
 </body>
