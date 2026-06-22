@@ -636,12 +636,12 @@
 
         ctx.lineWidth = 4;
         ctx.beginPath();
-        ctx.arc(x, y, 18, 0, Math.PI * 2);
+        ctx.arc(x, y, 24, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
 
         ctx.fillStyle = i < currentPointIndex ? '#ffffff' : '#333333';
-        ctx.font = 'bold 16px Arial';
+        ctx.font = 'bold 22px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(String(i + 1), x, y);
