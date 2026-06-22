@@ -407,7 +407,7 @@
 
       if (type === 'result') {
         return {
-          parts: [String(a), ' ' + operator + ' ', String(b), ' = '],
+          parts: [String(a), ' ' + operator + ' ', String(b), ' = ', ''],
           answer: answer,
           userAnswer: ''
         };
@@ -432,9 +432,21 @@
       const level = Number(document.getElementById('levelSelect').value);
       questions = [];
 
-      for (let i = 0; i < 10; i++) {
-        questions.push(makeQuestion(level));
+    const usedQuestions = new Set();
+    
+    while (questions.length < 10) {
+      const q = makeQuestion(level);
+      const key = q.parts.join('|') + '|' + q.answer;
+    
+      if (!usedQuestions.has(key)) {
+        usedQuestions.add(key);
+        questions.push(q);
       }
+    
+      if (usedQuestions.size > 30) {
+        questions.push(q);
+      }
+    }
 
       activeIndex = 0;
       document.getElementById('scoreBox').innerText = '';
